@@ -1,4 +1,4 @@
-interface ConversationMessage {
+export interface ConversationMessage {
   id: string;
   author: {
     role: string;
@@ -10,7 +10,7 @@ interface ConversationMessage {
   metadata: Record<string, unknown>;
 }
 
-interface Conversation {
+export interface Conversation {
   action: string;
   messages: ConversationMessage[];
   parent_message_id: string;

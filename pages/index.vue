@@ -26,9 +26,9 @@
           <li><a><Icon name="mdi:flag-outline-variant" /></a></li>
           <li>
             <div class="avatar">
-              <div class="w-8 rounded">
-                <img :src="client.user.avatar_url" alt="Tailwind-CSS-Avatar-component">
-              </div>
+              <a href="https://www.github.com/gaqno" target="_blank" class="w-8 rounded">
+                <img :src="client.user.avatar_url" alt="A">
+              </a>
             </div>
           </li>
         </ul>
@@ -51,7 +51,7 @@
             <ul class="menu p-4 h-full text-base-content">
               <!-- Sidebar content here -->
               <li>
-                <a>
+                <a @click.prevent="clearConversation">
                   <Icon name="mdi:delete-empty-outline" />
                   <span class="whiterow-nowrap">
                     Limpar conversa
@@ -69,33 +69,35 @@
         </Transition>
       </aside>
 
-      <section class="mx-10 min-w-[70vw] min-h-[86vh] flex flex-col justify-between px-4 text-black rounded-xl p-4 bg-[url(https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80)] ">
+      <section :class="[!app.sidemenu ? 'min-w-[95vw]' : 'min-w-[80vw]', 'mx-2 md:mx-8 min-h-[86vh] flex flex-col justify-between px-4 text-black rounded-xl p-4 bg-[url(https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80)]'] ">
         <article class="w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8">
-          <div class="flex items-start sm:gap-8">
+          <div class="flex mb-4 items-start sm:gap-8">
             <Icon name="mdi:star-four-points-small" class="text-6xl text-white" />
             <div class="w-full text-sm">
               <p class="text-white pr-6">
-                Olá! Eu sou LeninIA, um bot que responde perguntas sobre o Lenin e marxismo em geral.
+                Olá! Eu sou LeninGPT, um bot que tenta encarnar Vladmir Lenin.
               </p>
               <p class="text-white">
                 Pergunte-me qualquer coisa!
               </p>
             </div>
-            <a />
           </div>
         </article>
 
-        <div class="overflow-y-auto max-h-[50vh] mb-auto">
+        <div class="overflow-y-auto overflow-x-hidden max-h-[50vh] mb-auto mt-2">
           <article>
+            <!-- eslint-disable-next-line vue/no-template-shadow -->
             <div
-              v-for="response, ind in responseStream"
+              v-for="(res, ind) in responseStream"
               :key="`response_${ind}`"
-              class="flex items-start sm:gap-8 w-[50vw] my-3 w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
+              data-aos="fade-up"
+              class="flex items-start my-2 sm:gap-8 w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
             >
-              <Icon name="mdi:star-four-points-small" class="text-6xl text-white" />
+              <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
+              <Icon v-else name="mdi:hammer-sickle" class="text-3xl mr-4  md:mr-0 text-white" />
               <div class="w-full">
                 <p class="text-white pr-6">
-                  {{ response.data }}
+                  {{ res.data }}
                 </p>
               </div>
             </div>
@@ -107,7 +109,7 @@
             <div class="w-full mt-auto">
               <textarea
                 v-model="question"
-                class="w-full h-12 bg-black/10 text-white mt-2 p-2 border-0 rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
+                class="w-full text-sm h-12 bg-black/10 text-white mt-2 p-2 border-0 rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Pergunte-me algo"
               />
             </div>
@@ -115,7 +117,7 @@
             <button class="btn btn-ghost mt-4" @click="ask">
               <Icon
                 name="mdi:send-outline"
-                :disabled="loadingSteam"
+                :disabled="loadingSteam || !question"
                 class="text-white"
                 size="2em"
               />
@@ -123,6 +125,27 @@
           </div>
         </article>
       </section>
+    </div>
+    <div class="mt-6 p-4">
+      <footer clas="flex">
+        <p>
+          Essa aplicação foi feita com Vue3, TailwindCSS, Vite e OpenAI.
+        </p>
+        Essa aplicação gera custos, se você gostou e quer ajudar a manter o projeto no ar, considere fazer uma doação.
+
+        <p>
+          Faça uma doação para o projeto:
+        </p>
+        <a href="https://www.buymeacoffee.com/gaqno" target="_blank" class="">
+          <img
+            src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+            alt="Buy Me A Coffee"
+            height="60"
+            class="mt-6 mx-auto"
+            width="217"
+          >
+        </a>
+      </footer>
     </div>
   </main>
 </template>
@@ -156,10 +179,13 @@ const question = ref("");
 const responseStream = ref([] as IResponse[]);
 
 const ask = () => {
+  if (!question.value) { return; }
   responseStream.value.push({ data: question.value, role: "user" } as never);
   loadingSteam.value = true;
+  app.setLoading(true);
   useChatCompletion(question.value)
     .then((data: any) => {
+      app.setLoading(false);
       question.value = "";
       loadingSteam.value = false;
       response.value = data;
@@ -191,33 +217,21 @@ const fetchGit = () => {
   });
 };
 
-// const fetchBookbase = () => {
-//   return new Promise((resolve, reject) => {
-//     fetch("https://www.marxists.org/portugues/lenin/index.htm", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     })
-//       .then(res => res.json())
-//       .then(data => resolve(data))
-//       .catch(err => reject(err));
-//   });
-// };
+const clearConversation = () => {
+  responseStream.value = [];
+  app.$patch({ sidemenu: false });
+};
 
 onMounted(() => {
-  document.title = "LeninIA";
-  AOS.init({ duration: 1200 });
+  document.title = "LeninGPT";
+  AOS.init({
+    duration: 1200,
+    once: true,
+  });
 
   Promise.all([
     fetchGit(),
   ]);
-
-  // fetchBookbase()
-  //   .then((data) => {
-  //     console.log(data);
-  //   })
-  //   .catch(err => console.warn(err))
-  //   .finally(() => app.setLoading(false));
 });
+
 </script>

@@ -3,7 +3,7 @@ export const useAppStore = defineStore("app", {
     darkMode: false,
     loading: false,
     language: "pt",
-    sidemenu: true,
+    sidemenu: false,
     modal: {
       show: false,
       title: "",

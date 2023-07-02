@@ -1,7 +1,9 @@
 ]<template>
   <NuxtLayout>
-    <LoadingComponent v-if="app.loading" />
-    <NuxtPage />
+    <div>
+      <LoadingComponent v-if="app.loading" />
+      <NuxtPage />
+    </div>
   </NuxtLayout>
 </template>
 
@@ -10,7 +12,7 @@ import { useAppStore } from "./store/app";
 import "./global.css";
 
 const app = useAppStore();
-useHead({ title: "Gabriel Aquino" });
+useHead({ title: "Lenin GPT" });
 
 </script>
 
