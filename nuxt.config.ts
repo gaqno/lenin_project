@@ -24,6 +24,9 @@ export default defineNuxtConfig({
   i18n: {
     vueI18n: "./i18n.config.ts",
   },
+  tailwindcss: {
+    cssPath: "~/global.css",
+  },
   runtimeConfig: {
     public: {
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,

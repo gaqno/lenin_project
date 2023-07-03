@@ -3,6 +3,7 @@
   "env": {
     "node": true
   },
+  "plugins": ["vitest"],
   "extends": [
     "@nuxtjs/eslint-config-typescript"
   ],

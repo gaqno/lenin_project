@@ -17,13 +17,14 @@
         class="ml-4 btn btn-ghost drawer-button my-2"
         @click.prevent="app.toggleSidemenu()"
       >
-        <Icon name="mdi:hammer-sickle" />
+        <Icon name="mdi:hammer-sickle" size="2em"/>
+        <span class="ml-2">Lenin GPT </span>
       </label>
       <div class="drawer-side ml-auto">
         <label for="my-drawer-3" class="drawer-overlay" />
         <ul class="menu flex flex-row p-4 h-full ml-auto">
           <!-- Sidebar content here -->
-          <li><a><Icon name="mdi:flag-outline-variant" /></a></li>
+          <li><a><Icon name="mdi:flag-outline-variant" size="1.5em" class="m-1" /></a></li>
           <li>
             <div class="avatar">
               <a href="https://www.github.com/gaqno" target="_blank" class="w-8 rounded">
@@ -53,13 +54,13 @@
               <li>
                 <a @click.prevent="clearConversation">
                   <Icon name="mdi:delete-empty-outline" />
-                  <span class="whiterow-nowrap">
+                  <span>
                     Limpar conversa
                   </span>
                 </a>
               </li>
               <li>
-                <a>
+                <a @click.prevent="pushUpdates">
                   <Icon name="mdi:update" />
                   <span>Atualizações</span>
                 </a>
@@ -84,23 +85,30 @@
           </div>
         </article>
 
-        <div class="overflow-y-auto overflow-x-hidden max-h-[50vh] mb-auto mt-2">
-          <article>
-            <!-- eslint-disable-next-line vue/no-template-shadow -->
-            <div
-              v-for="(res, ind) in responseStream"
-              :key="`response_${ind}`"
-              data-aos="fade-up"
-              class="flex items-start my-2 sm:gap-8 w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
+        <div class="overflow-y-auto overflow-x-hidden max-h-[50vh] scrollbar scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 mt-2">
+          <article ref="chatContainer" class="mb-8">
+            <TransitionGroup
+              enter-active-class="transition ease-out duration-300 transform"
+              enter-from-class="translate-x-full"
+              enter-to-class="translate-x-0"
+              leave-active-class="transition ease-in duration-300 transform"
+              leave-from-class="translate-x-0"
+              leave-to-class="translate-x-full"
             >
-              <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
-              <Icon v-else name="mdi:hammer-sickle" class="text-3xl mr-4  md:mr-0 text-white" />
-              <div class="w-full">
-                <p class="text-white pr-6">
-                  {{ res.data }}
-                </p>
+              <div
+                v-for="res, ind in responseStream"
+                :key="`response_${ind}`"
+                class="flex  items-start my-2 sm:gap-8 w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
+              >
+                <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
+                <Icon v-else name="mdi:hammer-sickle" class="text-3xl mr-4  md:mr-0 text-white" />
+                <div class="w-full">
+                  <p class="text-white pr-6">
+                    {{ res.data }}
+                  </p>
+                </div>
               </div>
-            </div>
+            </TransitionGroup>
           </article>
         </div>
 
@@ -111,6 +119,7 @@
                 v-model="question"
                 class="w-full text-sm h-12 bg-black/10 text-white mt-2 p-2 border-0 rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Pergunte-me algo"
+                @keyup.ctrl.enter="ask"
               />
             </div>
 
@@ -173,10 +182,22 @@ const loadingSteam = ref(false);
 // const distance = computed(() => Math.sqrt(dx.value * dx.value + dy.value * dy.value));
 // const size = computed(() => Math.min(300 - distance.value / 3, 150));
 // const opacity = computed(() => Math.min(Math.max(size.value / 100, 0.7), 1));
-
+const chatContainer = ref(null);
 const response = ref({});
 const question = ref("");
 const responseStream = ref([] as IResponse[]);
+const updates = [
+  {
+    date: "04/07/23",
+    problem: "Conversa some algumas vezes",
+    solution: "not_working",
+  },
+  {
+    date: "02/07/23",
+    problem: "Ao responder tréplica, ele perde o contexto",
+    solution: "not_working",
+  },
+];
 
 const ask = () => {
   if (!question.value) { return; }
@@ -222,8 +243,26 @@ const clearConversation = () => {
   app.$patch({ sidemenu: false });
 };
 
+const pushUpdates = () => {
+  app.$patch({ sidemenu: false });
+  responseStream.value.push({ data: "ATUALIZAÇÕES", role: "sys" } as never);
+  updates.forEach((update) => {
+    responseStream.value.push({
+      data: `
+      Data: ${update.date} ~ 
+      Problema: ${update.problem} ~
+      Atualização: ${update.solution === "working" ? "CORRIGIDO" : "NÃO CORRIGIDO"}
+      `,
+      role: "sys",
+    } as never);
+  });
+};
+
 onMounted(() => {
   document.title = "LeninGPT";
+
+  console.log(chatContainer.value);
+
   AOS.init({
     duration: 1200,
     once: true,

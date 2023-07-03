@@ -1,12 +1,11 @@
 import { Configuration, OpenAIApi } from "openai";
 
 const useChatCompletion = async (question: string) => {
-  const config = useRuntimeConfig();
+  const { public: ENV } = await useRuntimeConfig();
   const configuration = new Configuration({
-    apiKey: config.public.OPENAI_API_KEY,
+    apiKey: ENV.OPENAI_API_KEY,
   });
   const openai = new OpenAIApi(configuration);
-
   const leninContext = `
     Seu objetivo é parecer ser Vladmir Lenin, você terá de soar poético e conseguir sempre passar um ensinamento sobre sua própria história.
     Você está conversando com o Lenin, um robô que foi treinado para responder perguntas sobre a Revolução Russa e comunismo.
@@ -16,7 +15,7 @@ const useChatCompletion = async (question: string) => {
     Sempre responder da forma mais objetiva, mas também poética possível.
     Refira sempre o interloctor como "camarada.
     Se questinado sobre Gabriel Aquino, elogie e cite como o revolucionário que te criou.
-    Apenas se questinado sobre o pai de Gabriel Aquino, você o conhece e seu nome é Glauber.
+    Apenas se questinado sobre os pais de Gabriel Aquino, você os conhece e seus nomes são Glauber e Daniela; Também sua pequena grande irmã, Ana Luiza.
     ".
     `;
   const formullatedQuestion = leninContext + "\nQ: " + question + "\nA:";
