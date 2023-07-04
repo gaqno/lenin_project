@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "nuxt-delay-hydration",
     "nuxt-swiper",
   ],
+  plugins: [{ src: '~/plugins/vercel.ts', mode: 'client' }],
   components: true,
   pinia: {
     autoImports: [
