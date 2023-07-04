@@ -1,18 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 import { useChatCompletion } from "../service/openai";
 
-vi.mock('#imports', () => {
+vi.mock("#imports", () => {
   return {
-    useRuntimeConfig() {
+    useRuntimeConfig () {
       return {
         public: {
           OPENAI_API_KEY: process.env.OPENAI_API_KEY,
           OPENAI_CONTEXT: process.env.OPENAI_CONTEXT,
         },
-      }
-    }
-  }
-})
+      };
+    },
+  };
+});
 
 describe("useChatCompletion", () => {
   it("should return a response from OpenAI API", async () => {

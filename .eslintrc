@@ -3,27 +3,15 @@
   "env": {
     "node": true
   },
-  "plugins": ["vitest"],
   "extends": [
     "@nuxtjs/eslint-config-typescript"
   ],
+  "plugins": ["vitest"],
   "parserOptions": {
     "parser": "@typescript-eslint/parser",
     "ecmaVersion": 2020
   },
   "rules": {
-    "vue/html-self-closing": [
-      "error",
-      {
-        "html": {
-          "void": "never",
-          "normal": "always",
-          "component": "always"
-        },
-        "svg": "always",
-        "math": "always"
-      }
-    ],
     "vue/max-attributes-per-line": [
       "error",
       {
@@ -99,6 +87,18 @@
       "always",
       {
         "ignore": []
+      }
+    ],
+    "vue/html-self-closing": [
+      "error",
+      {
+        "html": {
+          "void": "never",
+          "normal": "never",
+          "component": "always"
+        },
+        "svg": "always",
+        "math": "always"
       }
     ],
     // Additional rules to make it better

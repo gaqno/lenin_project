@@ -1,8 +1,8 @@
 ]<template>
   <NuxtLayout>
     <div>
-      <LoadingComponent v-if="app.loading" />
       <NuxtPage />
+      <LoadingComponent v-if="app.loading" />
     </div>
   </NuxtLayout>
 </template>
