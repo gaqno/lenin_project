@@ -45,7 +45,7 @@
               <li>
                 <a @click.prevent="clearConversation">
                   <Icon name="mdi:delete-empty-outline" />
-                  <span class="whiterow-">
+                  <span class="whitespace-nowrap">
                     Limpar conversa
                   </span>
                 </a>
@@ -61,23 +61,41 @@
         </Transition>
       </aside>
 
-      <section :class="[!app.sidemenu ? 'min-w-[95vw]' : 'min-w-[80vw]', 'mx-2 min-h-[86vh] flex flex-col justify-between px-4 text-black rounded-xl p-4 bg-[url(https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80)]'] ">
-        <article class="w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8">
+      <section :class="[!app.sidemenu ? 'min-w-[95vw]' : 'min-w-[70vw]', 'mx-2 min-h-[86vh] flex flex-col justify-between px-4 text-black rounded-xl p-4 bg-[url(https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80)]'] ">
+        <article class="w-[50vw] w-full pt-auto bg-slate-800/80 rounded-xl p-4 sm:p-6 lg:p-8">
           <div class="flex mb-4 items-start sm:gap-8">
             <Icon name="mdi:star-four-points-small" class="text-6xl text-white" />
             <div class="w-full text-sm">
               <p class="text-white pr-6">
-                Olá! Eu sou LeninGPT, um bot que tenta encarnar Vladmir Lenin.
+                Olá! Eu sou LeninGPT, um bot que tenta encarnar Vladimir Ilyich Ulianov.
               </p>
               <p class="text-white">
                 Pergunte-me qualquer coisa!
               </p>
+
+              <div class="mt-4 text-blue-400">
+                <p class="hover:underline" @click.prevent="handleTips('O que é socialismo?')">
+                  O que é socialismo?
+                </p>
+                <p class="hover:underline" @click.prevent="handleTips('Quem é você, como era seu bairro e onde morou?')">
+                  Quem é você, como era seu bairro?
+                </p>
+                <p class="hover:underline" @click.prevent="handleTips('O socialismo deu certo?')">
+                  O socialismo deu certo?
+                </p>
+                <p class="hover:underline" @click.prevent="handleTips('Por que ser socialista?')">
+                  Por que ser socialista?
+                </p>
+                <p class="hover:underline" @click.prevent="handleTips('Albert Einstein era um socialista?')">
+                  Albert Einstein era um socialista?
+                </p>
+              </div>
             </div>
           </div>
         </article>
 
-        <div class="overflow-y-auto overflow-x-hidden max-h-[50vh] scrollbar scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 mt-2">
-          <article ref="chatContainer">
+        <div ref="chatContainer" class="overflow-y-auto overflow-x-hidden max-h-[50vh] scrollbar scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 mt-2 my-6">
+          <article>
             <TransitionGroup
               enter-active-class="transition ease-out duration-300 transform"
               enter-from-class="translate-x-full"
@@ -94,7 +112,7 @@
                 <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
                 <Icon v-else name="mdi:bookshelf" class="text-3xl mr-4  md:mr-0 text-white" />
                 <div class="w-full">
-                  <p class="text-white pr-6">
+                  <p class="text-white pr-6 text-xs md:text-base">
                     {{ res.data }}
                   </p>
                 </div>
@@ -103,7 +121,7 @@
           </article>
         </div>
 
-        <article class="w-[20vw] w-full bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8">
+        <article class="w-[20vw] w-full bg-slate-800/90 rounded-xl p-4 sm:p-6 lg:p-8">
           <div class="flex items-start sm:gap-8">
             <div class="w-full mt-auto">
               <textarea
@@ -128,11 +146,9 @@
     </div>
     <div class="bg-slate-900 mt-4">
       <footer class="grid grid-cols-6 mt-6 p-8 ">
-        <span class="col-span-4">
-          <p>
-            Essa aplicação foi feita com Vue3, TailwindCSS, Vite e OpenAI.
-          </p>
-          Essa aplicação gera custos, se você gostou e quer ajudar a manter o projeto no ar, considere fazer uma doação.
+        <span class="col-span-4 m-1 text-xs">
+          <p>Essa aplicação foi feita com Vue3, TailwindCSS, Vite e OpenAI.</p>
+          <p>Essa aplicação gera custos, se você gostou e quer ajudar a manter o projeto no ar, considere fazer uma doação.</p>
         </span>
         <a href="https://www.buymeacoffee.com/gaqno" target="_blank" class="col-span-2">
           <img
@@ -169,7 +185,7 @@ const loadingSteam = ref(false);
 // const distance = computed(() => Math.sqrt(dx.value * dx.value + dy.value * dy.value));
 // const size = computed(() => Math.min(300 - distance.value / 3, 150));
 // const opacity = computed(() => Math.min(Math.max(size.value / 100, 0.7), 1));
-const chatContainer = ref(null);
+const chatContainer = ref({} as HTMLDivElement);
 const response = ref({});
 const question = ref("");
 const responseStream = ref([] as IResponse[]);
@@ -180,22 +196,6 @@ const updates = [
     solution: "not_working",
   },
 ];
-
-const ask = () => {
-  if (!question.value) { return; }
-  responseStream.value.push({ data: question.value, role: "user" } as never);
-  loadingSteam.value = true;
-  app.setLoading(true);
-  useChatCompletion(question.value)
-    .then((data: any) => {
-      app.setLoading(false);
-      question.value = "";
-      loadingSteam.value = false;
-      response.value = data;
-      responseStream.value.push({ data: data.content, role: "sys" } as never);
-    })
-    .catch(err => console.warn(err));
-};
 
 const fetchGit = () => {
   app.setLoading(true);
@@ -218,6 +218,35 @@ const fetchGit = () => {
       })
       .catch(err => reject(err));
   });
+};
+
+const ask = () => {
+  if (!question.value) { return; }
+  const questionText = question.value;
+  question.value = "";
+  responseStream.value.push({ data: questionText, role: "user" } as never);
+  loadingSteam.value = true;
+  app.setLoading(true);
+  useChatCompletion(questionText)
+    .then((data: any) => {
+      app.setLoading(false);
+      loadingSteam.value = false;
+      response.value = data;
+      responseStream.value.push({ data: data.content, role: "sys" } as never);
+
+      if (chatContainer.value) {
+        chatContainer.value.scrollTo({
+          top: chatContainer.value.scrollHeight + 400,
+          behavior: "smooth",
+        });
+      }
+    })
+    .catch(err => console.warn(err));
+};
+
+const handleTips = (text: string) => {
+  question.value = text;
+  ask();
 };
 
 const clearConversation = () => {
