@@ -19,7 +19,7 @@ const useChatCompletion = async (question: string) => {
     `;
   const formullatedQuestion = leninContext + "\nQ: " + question + "\nA:";
   const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4-0613",
     temperature: 0.2,
     user: "Lenin",
     messages: [{ role: "user", content: formullatedQuestion }],
