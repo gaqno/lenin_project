@@ -74,19 +74,19 @@
               </p>
 
               <div class="mt-4 text-blue-400">
-                <p class="hover:underline" @click.prevent="handleTips('O que é socialismo?')">
+                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('O que é socialismo?')">
                   O que é socialismo?
                 </p>
-                <p class="hover:underline" @click.prevent="handleTips('Quem é você, como era seu bairro e onde morou?')">
+                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('Quem é você, como era seu bairro e onde morou?')">
                   Quem é você, como era seu bairro?
                 </p>
-                <p class="hover:underline" @click.prevent="handleTips('O socialismo deu certo?')">
+                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('O socialismo deu certo?')">
                   O socialismo deu certo?
                 </p>
-                <p class="hover:underline" @click.prevent="handleTips('Por que ser socialista?')">
+                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('Por que ser socialista?')">
                   Por que ser socialista?
                 </p>
-                <p class="hover:underline" @click.prevent="handleTips('Albert Einstein era um socialista?')">
+                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('Albert Einstein era um socialista?')">
                   Albert Einstein era um socialista?
                 </p>
               </div>
