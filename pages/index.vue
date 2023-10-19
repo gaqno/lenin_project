@@ -116,6 +116,7 @@
                     {{ res.data }}
                   </p>
                 </div>
+                <Icon v-if="res.role === 'audio' && loadingAudio" name="mdi:volume-high" class="text-3xl mr-4  md:mr-0 text-white" />
                 <audio v-if="res.role === 'audio'" autoPlay controls>
                   <source v-if="res.data" :src="res.data" type="audio/mpeg">
                 </audio>
@@ -138,7 +139,7 @@
             <button class="btn btn-ghost mt-4" @click="ask">
               <Icon
                 name="mdi:send-outline"
-                :disabled="loadingSteam || !question"
+                :disabled="loadingMessage || !question"
                 class="text-white"
                 size="2em"
               />
@@ -180,7 +181,8 @@ interface IResponse {
 }
 const app = useAppStore();
 const client = useClientStore();
-const loadingSteam = ref(false);
+const loadingMessage = ref(false);
+const loadingAudio = ref(false);
 const chatContainer = ref({} as HTMLDivElement);
 const question = ref("");
 const responseStream = ref([] as IResponse[]);
@@ -188,7 +190,12 @@ const updates = [
   {
     date: "02/07/23",
     problem: "Ao responder tréplica, ele perde o contexto",
-    solution: "not_working",
+    solution: "working",
+  },
+  {
+    date: "19/10/23",
+    problem: "feat: resposta de áudio",
+    solution: "working",
   },
 ];
 
@@ -220,12 +227,13 @@ const ask = () => {
   const questionText = question.value;
   question.value = "";
   responseStream.value.push({ data: questionText, role: "user" } as never);
-  loadingSteam.value = true;
+  loadingMessage.value = true;
+  loadingAudio.value = true;
   app.setLoading(true);
   useChatCompletion(questionText)
     .then((data: any) => {
       const { message } = data;
-      loadingSteam.value = false;
+      loadingMessage.value = false;
       responseStream.value.push({ data: message.content, role: "sys" } as never);
 
       if (chatContainer.value) {
@@ -256,6 +264,7 @@ const ask = () => {
           const audioBlob = new Blob([audio], { type: "audio/mpeg" });
           const audioUrl = URL.createObjectURL(audioBlob);
           responseStream.value.push({ data: audioUrl, role: "audio" } as never);
+          loadingAudio.value = false;
           app.setLoading(false);
         });
     })
