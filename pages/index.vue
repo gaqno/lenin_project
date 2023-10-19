@@ -111,11 +111,14 @@
               >
                 <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
                 <Icon v-else name="mdi:bookshelf" class="text-3xl mr-4  md:mr-0 text-white" />
-                <div class="w-full">
+                <div v-if="res.role === 'sys' || res.role === 'user'" class="w-full">
                   <p class="text-white pr-6 text-xs md:text-base">
                     {{ res.data }}
                   </p>
                 </div>
+                <audio v-if="res.role === 'audio'" autoPlay controls>
+                  <source v-if="res.data" :src="res.data" type="audio/mpeg">
+                </audio>
               </div>
             </TransitionGroup>
           </article>
@@ -169,24 +172,16 @@ import { useAppStore } from "~/store/app";
 import { useClientStore } from "~/store/client";
 import { User } from "~/types/git";
 import { useChatCompletion } from "~/service/openai";
+import { postElevenLabsTextToSpeech } from "~/service/elevenlabs";
 
 interface IResponse {
   data: string;
   role: string;
 }
-
 const app = useAppStore();
 const client = useClientStore();
 const loadingSteam = ref(false);
-// const { x, y } = useMouse();
-// const { width, height } = useWindowSize();
-// const dx = computed(() => Math.abs(x.value - width.value / 2));
-// const dy = computed(() => Math.abs(y.value - height.value / 2));
-// const distance = computed(() => Math.sqrt(dx.value * dx.value + dy.value * dy.value));
-// const size = computed(() => Math.min(300 - distance.value / 3, 150));
-// const opacity = computed(() => Math.min(Math.max(size.value / 100, 0.7), 1));
 const chatContainer = ref({} as HTMLDivElement);
-const response = ref({});
 const question = ref("");
 const responseStream = ref([] as IResponse[]);
 const updates = [
@@ -221,7 +216,7 @@ const fetchGit = () => {
 };
 
 const ask = () => {
-  if (!question.value) { return; }
+  if (question.value === "") { return; }
   const questionText = question.value;
   question.value = "";
   responseStream.value.push({ data: questionText, role: "user" } as never);
@@ -229,10 +224,9 @@ const ask = () => {
   app.setLoading(true);
   useChatCompletion(questionText)
     .then((data: any) => {
-      app.setLoading(false);
+      const { message } = data;
       loadingSteam.value = false;
-      response.value = data;
-      responseStream.value.push({ data: data.content, role: "sys" } as never);
+      responseStream.value.push({ data: message.content, role: "sys" } as never);
 
       if (chatContainer.value) {
         chatContainer.value.scrollTo({
@@ -240,6 +234,30 @@ const ask = () => {
           behavior: "smooth",
         });
       }
+
+      postElevenLabsTextToSpeech({
+        headers: ["audio/mpeg"],
+        params: {
+          optimize_streaming_latency: 0,
+          output_format: "mp3_44100_128",
+        },
+        payload: {
+          text: data.message.content || "",
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            stability: 0,
+            similarity_boost: 0,
+            style: 0,
+            use_speaker_boost: true,
+          },
+        },
+      })
+        .then((audio) => {
+          const audioBlob = new Blob([audio], { type: "audio/mpeg" });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          responseStream.value.push({ data: audioUrl, role: "audio" } as never);
+          app.setLoading(false);
+        });
     })
     .catch(err => console.warn(err));
 };
@@ -271,7 +289,6 @@ const pushUpdates = () => {
 
 onMounted(() => {
   document.title = "LeninGPT";
-
   Promise.all([
     fetchGit(),
   ]);

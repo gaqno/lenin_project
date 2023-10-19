@@ -32,6 +32,9 @@ export default defineNuxtConfig({
     public: {
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
       OPENAI_CONTEXT: process.env.OPENAI_CONTEXT,
+      ELEVENLABS_TOKEN: process.env.ELEVENLABS_TOKEN,
+      ELEVENLABS_VOICE_ID: process.env.ELEVENLABS_VOICE_ID,
+      ELEVENLABS_BASE_URL: process.env.ELEVENLABS_BASE_URL,
     },
   },
 });
