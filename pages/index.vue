@@ -74,19 +74,19 @@
               </p>
 
               <div class="mt-4 text-blue-400">
-                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('O que é socialismo?')">
+                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('O que é socialismo?')">
                   O que é socialismo?
                 </p>
-                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('Quem é você, como era seu bairro e onde morou?')">
+                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('Quem é você, como era seu bairro e onde morou?')">
                   Quem é você, como era seu bairro?
                 </p>
-                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('O socialismo deu certo?')">
+                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('O socialismo deu certo?')">
                   O socialismo deu certo?
                 </p>
-                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('Por que ser socialista?')">
+                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('Por que ser socialista?')">
                   Por que ser socialista?
                 </p>
-                <p class="hover:underline hover:cursor-pointer" @click.prevent="handleTips('Albert Einstein era um socialista?')">
+                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('Albert Einstein era um socialista?')">
                   Albert Einstein era um socialista?
                 </p>
               </div>
@@ -95,34 +95,36 @@
         </article>
 
         <div ref="chatContainer" class="overflow-y-auto overflow-x-hidden max-h-[50vh] scrollbar scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 mt-2 my-6">
-          <article>
-            <TransitionGroup
-              enter-active-class="transition ease-out duration-300 transform"
-              enter-from-class="translate-x-full"
-              enter-to-class="translate-x-0"
-              leave-active-class="transition ease-in duration-300 transform"
-              leave-from-class="translate-x-0"
-              leave-to-class="translate-x-full"
+          <TransitionGroup
+            enter-active-class="transition ease-out duration-300 transform"
+            enter-from-class="translate-x-full"
+            enter-to-class="translate-x-0"
+            leave-active-class="transition ease-in duration-300 transform"
+            leave-from-class="translate-x-0"
+            leave-to-class="translate-x-full"
+          >
+            <div
+              v-for="res, ind in responseStream"
+              :key="`response_${ind}`"
+              class="flex mb-auto items-start items-center my-2 sm:gap-8 w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
             >
-              <div
-                v-for="res, ind in responseStream"
-                :key="`response_${ind}`"
-                class="flex mb-auto items-start my-2 sm:gap-8 w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
-              >
-                <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
-                <Icon v-else name="mdi:bookshelf" class="text-3xl mr-4  md:mr-0 text-white" />
-                <div v-if="res.role === 'sys' || res.role === 'user'" class="w-full">
-                  <p class="text-white pr-6 text-xs md:text-base">
-                    {{ res.data }}
-                  </p>
-                </div>
-                <Icon v-if="res.role === 'audio' && loadingAudio" name="mdi:volume-high" class="text-3xl mr-4  md:mr-0 text-white" />
-                <audio v-if="res.role === 'audio'" autoPlay controls>
-                  <source v-if="res.data" :src="res.data" type="audio/mpeg">
-                </audio>
+              <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
+              <Icon v-if="res.role === 'warn'" name="mdi:headset" class="text-3xl text-white" />
+              <Icon v-else-if="res.role === 'loading'" :name="res.data" class="text-3xl text-white" />
+              <Icon v-else name="mdi:bookshelf" class="text-3xl mr-4  md:mr-0 text-white" />
+              <div v-if="res.role === 'sys' || res.role === 'user' || res.role === 'warn'" class="w-full">
+                <p class="text-white pr-6 text-xs md:text-base">
+                  {{ res.data }}
+                </p>
               </div>
-            </TransitionGroup>
-          </article>
+              <audio v-if="res.role === 'audio'" autoPlay controls>
+                <source v-if="res.data" :src="res.data" type="audio/mpeg">
+              </audio>
+              <div v-if="res.role === 'loading'" class="w-full flex flex-row gap-x-6">
+                <progress class="progress w-full"></progress>
+              </div>
+            </div>
+          </TransitionGroup>
         </div>
 
         <article class="w-[20vw] w-full bg-slate-800/90 rounded-xl p-4 sm:p-6 lg:p-8">
@@ -140,6 +142,13 @@
               <Icon
                 name="mdi:send-outline"
                 :disabled="loadingMessage || !question"
+                class="text-white"
+                size="2em"
+              />
+            </button>
+            <button class="btn btn-ghost mt-4" @click="responseStream = []">
+              <Icon
+                name="mdi:trash-can-outline"
                 class="text-white"
                 size="2em"
               />
@@ -227,22 +236,15 @@ const ask = () => {
   const questionText = question.value;
   question.value = "";
   responseStream.value.push({ data: questionText, role: "user" } as never);
-  loadingMessage.value = true;
-  loadingAudio.value = true;
   app.setLoading(true);
   useChatCompletion(questionText)
     .then((data: any) => {
       const { message } = data;
       loadingMessage.value = false;
+      loadingAudio.value = true;
       responseStream.value.push({ data: message.content, role: "sys" } as never);
-
-      if (chatContainer.value) {
-        chatContainer.value.scrollTo({
-          top: chatContainer.value.scrollHeight + 400,
-          behavior: "smooth",
-        });
-      }
-
+      responseStream.value.push({ data: "iconoir:voice-circle", role: "loading" } as never);
+      app.setLoading(false);
       postElevenLabsTextToSpeech({
         headers: ["audio/mpeg"],
         params: {
@@ -261,11 +263,17 @@ const ask = () => {
         },
       })
         .then((audio) => {
+          responseStream.value.pop();
           const audioBlob = new Blob([audio], { type: "audio/mpeg" });
           const audioUrl = URL.createObjectURL(audioBlob);
           responseStream.value.push({ data: audioUrl, role: "audio" } as never);
           loadingAudio.value = false;
-          app.setLoading(false);
+        })
+        .catch((err) => {
+          console.warn(err);
+          loadingAudio.value = false;
+          responseStream.value.pop();
+          responseStream.value.push({ data: "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida", role: "warn" } as never);
         });
     })
     .catch(err => console.warn(err));
@@ -295,6 +303,15 @@ const pushUpdates = () => {
     } as never);
   });
 };
+
+watchEffect(() => {
+  if (responseStream.value && responseStream.value.length > 0) {
+    chatContainer.value.scroll({
+      top: chatContainer.value.scrollHeight + 1000,
+      behavior: "smooth",
+    });
+  }
+});
 
 onMounted(() => {
   document.title = "LeninGPT";
