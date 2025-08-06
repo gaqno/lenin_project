@@ -17,11 +17,6 @@
       "dest": "/"
     }
   ],
-  "functions": {
-    "server/api/chat.post.ts": {
-      "maxDuration": 30
-    }
-  },
   "env": {
     "NODE_VERSION": "22"
   }
