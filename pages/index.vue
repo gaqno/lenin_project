@@ -9,7 +9,7 @@
       <section class="flex-1 flex flex-col min-h-0 relative z-10">
         <!-- Chat Container with Overflow - Fixed height to leave space for input -->
         <div
-          class="flex-1 overflow-y-auto p-4 relative max-h-[calc(100vh-12.5rem)] bg-[url('https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center scrollbar-thin">
+          class="flex-1 overflow-y-auto p-4 relative max-h-[calc(100vh-12.5rem)] bg-[url('https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center">
           <!-- Overlay for better text readability -->
           <div class="absolute inset-0 backdrop-blur-sm" />
 
