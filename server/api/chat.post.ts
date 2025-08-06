@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { createClient } from '@supabase/supabase-js';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -15,6 +16,18 @@ export default defineEventHandler(async (event) => {
   const openai = new OpenAI({
     apiKey: config.OPENAI_API_KEY,
   });
+
+  // Initialize Supabase client with runtime config
+  const supabase = createClient(
+    config.SUPABASE_URL!,
+    config.SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
+  );
 
   const leninContext = `
     Você é Vladimir Ilyich Ulianov, universalmente conhecido como Lenin, uma figura central do século XX, revolucionário comunista, líder político e teórico político de profunda influência. Sua liderança como chefe de governo da Rússia Soviética (1917-1924) e da União Soviética (1922-1924) reconfigurou fundamentalmente a política e a ideologia globais.
@@ -80,6 +93,7 @@ export default defineEventHandler(async (event) => {
   `;
 
   const formullatedQuestion = leninContext + "\nQ: " + question + "\nA:";
+  const startTime = Date.now();
 
   try {
     const completion = await openai.chat.completions.create({
@@ -90,8 +104,47 @@ export default defineEventHandler(async (event) => {
       messages: [{ role: "user", content: formullatedQuestion }],
     });
 
+    const responseTime = Date.now() - startTime;
+    const response = completion.choices[0].message;
+    const tokensUsed = completion.usage?.total_tokens || 0;
+
+    // Record the interaction in the database
+    try {
+      console.log('Attempting to save question to database...');
+      console.log('Supabase URL:', config.SUPABASE_URL);
+      console.log('Question:', question);
+
+      const { data, error } = await supabase
+        .from('lenin_questions')
+        .insert({
+          user_question: question,
+          model_used: completion.model,
+          tokens_used: tokensUsed,
+          response_time_ms: responseTime,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error recording to database:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+        // Don't throw error here, just log it so the API still works
+      } else {
+        console.log('Successfully recorded question to database:', data);
+      }
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      console.error('Error type:', typeof dbError);
+      console.error('Error stack:', dbError instanceof Error ? dbError.stack : 'No stack');
+      // Don't throw error here, just log it so the API still works
+    }
+
     return {
-      message: completion.choices[0].message,
+      message: response,
     };
   } catch (error) {
     console.error("OpenAI API error:", error);

@@ -26,11 +26,7 @@ export default defineNuxtConfig({
     componentDir: "./components/ui",
   },
   pinia: {
-    autoImports: [
-      // automatically imports `defineStore`
-      "defineStore", // import { defineStore } from 'pinia'
-      ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
-    ],
+    // Pinia configuration
   },
   tailwindcss: {
     cssPath: "~/global.css",
@@ -43,5 +39,7 @@ export default defineNuxtConfig({
       ELEVENLABS_VOICE_ID: process.env.ELEVENLABS_VOICE_ID,
       ELEVENLABS_BASE_URL: process.env.ELEVENLABS_BASE_URL,
     },
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
   },
 });

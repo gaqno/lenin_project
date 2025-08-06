@@ -92,6 +92,11 @@
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- Command Palette -->
+    <ChatCommand :is-open="showCommandPalette" @clear-chat="clearMessages" @show-updates="handleShowUpdates"
+      @show-settings="handleShowSettings" @quick-tip="handleQuickTip" @show-about="showAboutDialog = true"
+      @open-github="handleOpenGitHub" @close="showCommandPalette = false" />
   </main>
   <!-- </ToastProvider> -->
 </template>
@@ -112,6 +117,7 @@ import ChatHeader from "~/components/chat/ChatHeader.vue";
 import WelcomeCard from "~/components/chat/WelcomeCard.vue";
 import ChatMessage from "~/components/chat/ChatMessage.vue";
 import ChatInput from "~/components/chat/ChatInput.vue";
+import ChatCommand from "~/components/chat/ChatCommand.vue";
 
 // Stores
 const app = useAppStore();
@@ -240,6 +246,22 @@ const ask = (questionText: string) => {
 
 const handleTips = (text: string) => {
   ask(text);
+};
+
+const handleQuickTip = (tip: string) => {
+  ask(tip);
+};
+
+const handleShowUpdates = () => {
+  showInfo("Atualizações", "Versão mais recente do Lenin GPT");
+};
+
+const handleShowSettings = () => {
+  showInfo("Configurações", "Configurações em desenvolvimento");
+};
+
+const handleOpenGitHub = () => {
+  window.open("https://www.github.com/gaqno", "_blank");
 };
 
 const clearMessages = () => {
