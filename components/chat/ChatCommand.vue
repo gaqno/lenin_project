@@ -4,31 +4,31 @@
     <CommandList>
       <CommandEmpty>Nenhum comando encontrado.</CommandEmpty>
       <CommandGroup heading="Ações">
-        <CommandItem @select="handleClearChat">
+        <CommandItem value="clear-chat" @select="handleClearChat">
           <Icon name="mdi:delete-empty-outline" class="mr-2 h-4 w-4" />
           <span>Limpar conversa</span>
         </CommandItem>
-        <CommandItem @select="handleShowUpdates">
+        <CommandItem value="show-updates" @select="handleShowUpdates">
           <Icon name="mdi:update" class="mr-2 h-4 w-4" />
           <span>Ver atualizações</span>
         </CommandItem>
-        <CommandItem @select="handleShowSettings">
+        <CommandItem value="show-settings" @select="handleShowSettings">
           <Icon name="mdi:cog" class="mr-2 h-4 w-4" />
           <span>Configurações</span>
         </CommandItem>
       </CommandGroup>
       <CommandGroup heading="Perguntas Rápidas">
-        <CommandItem v-for="tip in quickTips" :key="tip" @select="handleQuickTip(tip)">
+        <CommandItem v-for="tip in quickTips" :key="tip" :value="tip" @select="handleQuickTip(tip)">
           <Icon name="mdi:lightbulb-outline" class="mr-2 h-4 w-4" />
           <span>{{ tip }}</span>
         </CommandItem>
       </CommandGroup>
       <CommandGroup heading="Navegação">
-        <CommandItem @select="handleAbout">
+        <CommandItem value="about" @select="handleAbout">
           <Icon name="mdi:information-outline" class="mr-2 h-4 w-4" />
           <span>Sobre</span>
         </CommandItem>
-        <CommandItem @select="handleGitHub">
+        <CommandItem value="github" @select="handleGitHub">
           <Icon name="mdi:github" class="mr-2 h-4 w-4" />
           <span>GitHub</span>
         </CommandItem>
