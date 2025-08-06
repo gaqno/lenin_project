@@ -3,7 +3,7 @@
     v-bind="forwardedProps"
     :class="cn('border-b', props.class)"
   >
-    <slot></slot>
+    <slot />
   </AccordionItem>
 </template>
 

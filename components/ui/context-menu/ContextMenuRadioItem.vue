@@ -11,7 +11,7 @@
         <Circle class="h-4 w-4 fill-current" />
       </ContextMenuItemIndicator>
     </span>
-    <slot></slot>
+    <slot />
   </ContextMenuRadioItem>
 </template>
 

@@ -7,11 +7,18 @@
     </div>
 
     <div class="flex items-center space-x-2">
-      <Button variant="ghost" size="icon" @click="toggleTheme"
-        :title="isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'">
+      <Button variant="ghost" size="icon" title="Configurações" @click="handleSettingsClick">
+        <Icon name="mdi:cog" class="h-5 w-5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        :title="isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'"
+        @click="toggleTheme"
+      >
         <Icon :name="isDark ? 'mdi:weather-sunny' : 'mdi:weather-night'" class="h-5 w-5" />
       </Button>
-      <Button variant="ghost" size="icon" @click="showAboutDialog = true">
+      <Button variant="ghost" size="icon" @click="handleAboutClick">
         <Icon name="mdi:information-outline" class="h-5 w-5" />
       </Button>
       <Button variant="ghost" size="icon" as-child>
@@ -32,17 +39,19 @@ interface IChatHeaderProps {
 
 interface IChatHeaderEmits {
   (e: "show-about"): void;
+  (e: "show-settings"): void;
 }
 
 defineProps<IChatHeaderProps>();
 const emit = defineEmits<IChatHeaderEmits>();
 
-const showAboutDialog = ref(false);
 const { isDark, toggleTheme } = useTheme();
 
-watch(showAboutDialog, (newValue) => {
-  if (newValue) {
-    emit("show-about");
-  }
-});
+const handleSettingsClick = () => {
+  emit("show-settings");
+};
+
+const handleAboutClick = () => {
+  emit("show-about");
+};
 </script>

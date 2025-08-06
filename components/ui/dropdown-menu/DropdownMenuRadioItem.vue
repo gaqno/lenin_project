@@ -11,7 +11,7 @@
         <Circle class="h-4 w-4 fill-current" />
       </DropdownMenuItemIndicator>
     </span>
-    <slot></slot>
+    <slot />
   </DropdownMenuRadioItem>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div :class="cn('space-y-2', props.class)">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 

@@ -16,7 +16,7 @@
     )"
     v-bind="forwardedProps"
   >
-    <slot></slot>
+    <slot />
   </CalendarCellTrigger>
 </template>
 

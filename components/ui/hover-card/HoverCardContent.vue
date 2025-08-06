@@ -9,7 +9,7 @@
         )
       "
     >
-      <slot></slot>
+      <slot />
     </HoverCardContent>
   </HoverCardPortal>
 </template>

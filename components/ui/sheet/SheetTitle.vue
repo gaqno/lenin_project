@@ -3,7 +3,7 @@
     :class="cn('text-lg font-semibold text-foreground', props.class)"
     v-bind="delegatedProps"
   >
-    <slot></slot>
+    <slot />
   </DialogTitle>
 </template>
 

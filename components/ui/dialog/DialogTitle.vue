@@ -8,7 +8,7 @@
       )
     "
   >
-    <slot></slot>
+    <slot />
   </DialogTitle>
 </template>
 

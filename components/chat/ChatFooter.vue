@@ -6,8 +6,10 @@
     </Button>
 
     <!-- Simple Modal -->
-    <div v-if="isOpenComputed"
-      class="fixed bottom-20 right-4 z-[300] bg-background border rounded-lg shadow-lg w-80 p-4">
+    <div
+      v-if="isOpenComputed"
+      class="fixed bottom-20 right-4 z-[300] bg-background border rounded-lg shadow-lg w-80 p-4"
+    >
       <div class="flex justify-between items-start mb-4">
         <div>
           <h3 class="font-semibold text-lg">

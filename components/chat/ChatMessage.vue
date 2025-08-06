@@ -2,20 +2,35 @@
   <Card :class="messageClass">
     <CardContent class="p-4">
       <div class="flex items-start space-x-3">
-        <Icon :name="getMessageIcon(message.role)" :class="getMessageIconClass(message.role)" />
+        <!-- Avatar for system messages -->
+        <div v-if="message.role === 'sys'" class="flex-shrink-0">
+          <img src="/lenin_profile.jpg" alt="Lenin" class="h-8 w-8 rounded-full object-cover">
+        </div>
+
+        <!-- Icon for other message types -->
+        <Icon v-else :name="getMessageIcon(message.role)" :class="getMessageIconClass(message.role)" />
+
         <div class="flex-1 min-w-0">
-          <p v-if="message.role !== 'audio'" class="text-sm break-words leading-relaxed font-medium"
-            :class="getTextClass(message.role)">
+          <p
+            v-if="message.role !== 'audio'"
+            class="text-sm break-words leading-relaxed font-medium"
+            :class="getTextClass(message.role)"
+          >
             {{ message.data }}
           </p>
 
           <!-- Audio Player -->
-          <AudioPlayer v-if="message.role === 'audio'" :audio-url="message.data" :autoplay="true" class="mt-3" />
+          <AudioPlayer
+            v-if="message.role === 'audio'"
+            :audio-url="message.data"
+            :autoplay="autoplayEnabled"
+            class="mt-3"
+          />
 
           <!-- Loading Bar -->
           <div v-if="message.role === 'loading'" class="mt-2">
             <div class="h-2 bg-muted/40 rounded-full overflow-hidden">
-              <div class="h-full bg-primary rounded-full animate-pulse"></div>
+              <div class="h-full bg-primary rounded-full animate-pulse" />
             </div>
           </div>
         </div>
@@ -25,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import AudioPlayer from '~/components/ui/AudioPlayer.vue';
+import AudioPlayer from "~/components/ui/AudioPlayer.vue";
 
 export interface IChatMessage {
   data: string;
@@ -34,9 +49,12 @@ export interface IChatMessage {
 
 interface IChatMessageProps {
   message: IChatMessage;
+  autoplayEnabled?: boolean;
 }
 
-const props = defineProps<IChatMessageProps>();
+const props = withDefaults(defineProps<IChatMessageProps>(), {
+  autoplayEnabled: false,
+});
 
 const messageClass = computed(() => {
   switch (props.message.role) {

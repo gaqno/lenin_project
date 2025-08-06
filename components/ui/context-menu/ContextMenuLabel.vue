@@ -6,7 +6,7 @@
          inset && 'pl-8', props.class,
       )"
   >
-    <slot></slot>
+    <slot />
   </ContextMenuLabel>
 </template>
 

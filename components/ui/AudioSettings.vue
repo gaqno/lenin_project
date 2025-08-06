@@ -1,78 +1,78 @@
 <template>
   <div class="space-y-4">
-    <div class="flex items-center justify-between">
-      <div class="space-y-0.5">
-        <Label>Autoplay de Áudio</Label>
-        <p class="text-sm text-muted-foreground">
-          Reproduzir áudio automaticamente quando disponível
-        </p>
-      </div>
-      <Switch :checked="autoplay" @update:checked="$emit('update:autoplay', $event)" />
-    </div>
-
-    <div class="flex items-center justify-between">
-      <div class="space-y-0.5">
-        <Label>Volume Padrão</Label>
-        <p class="text-sm text-muted-foreground">
-          Volume inicial para novos áudios
-        </p>
-      </div>
+    <div class="space-y-2">
+      <Label for="generate-audio">Gerar Áudio</Label>
       <div class="flex items-center space-x-2">
-        <span class="text-sm">{{ Math.round(defaultVolume * 100) }}%</span>
-        <input type="range" :min="0" :max="1" :step="0.1" :value="defaultVolume" @input="updateDefaultVolume"
-          class="w-20 h-1 bg-muted rounded-lg appearance-none cursor-pointer" />
+        <Switch
+          id="generate-audio"
+          :model-value="audioStore.generateAudio"
+          @update:model-value="audioStore.updateGenerateAudio"
+        />
+        <Label for="generate-audio" class="text-sm font-normal">
+          Gerar áudio das respostas automaticamente
+        </Label>
       </div>
     </div>
 
-    <div class="flex items-center justify-between">
-      <div class="space-y-0.5">
-        <Label>Velocidade Padrão</Label>
-        <p class="text-sm text-muted-foreground">
-          Velocidade inicial de reprodução
-        </p>
+    <div v-if="audioStore.generateAudio" class="space-y-4">
+      <div class="space-y-2">
+        <Label for="autoplay-audio">Autoplay</Label>
+        <div class="flex items-center space-x-2">
+          <Switch
+            id="autoplay-audio"
+            :model-value="audioStore.autoplayAudio"
+            @update:model-value="audioStore.updateAutoplayAudio"
+          />
+          <Label for="autoplay-audio" class="text-sm font-normal">
+            Reproduzir áudio automaticamente
+          </Label>
+        </div>
       </div>
-      <Select :model-value="defaultSpeed" @update:model-value="updateDefaultSpeed">
-        <SelectTrigger class="w-24">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="0.5">0.5x</SelectItem>
-          <SelectItem value="0.75">0.75x</SelectItem>
-          <SelectItem value="1">1x</SelectItem>
-          <SelectItem value="1.25">1.25x</SelectItem>
-          <SelectItem value="1.5">1.5x</SelectItem>
-          <SelectItem value="2">2x</SelectItem>
-        </SelectContent>
-      </Select>
+
+      <div class="space-y-2">
+        <Label for="default-volume">Volume Padrão</Label>
+        <div class="flex items-center space-x-2">
+          <Slider
+            id="default-volume"
+            :model-value="[audioStore.defaultVolume]"
+            :min="0"
+            :max="1"
+            :step="0.1"
+            class="flex-1"
+            @update:model-value="(value: number[] | undefined) => audioStore.updateDefaultVolume(value?.[0] || 0.8)"
+          />
+          <span class="text-sm text-muted-foreground w-12 text-right">
+            {{ Math.round(audioStore.defaultVolume * 100) }}%
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <Label for="audio-speed">Velocidade de Reprodução</Label>
+        <div class="flex items-center space-x-2">
+          <Slider
+            id="audio-speed"
+            :model-value="[audioStore.audioSpeed]"
+            :min="0.5"
+            :max="2"
+            :step="0.1"
+            class="flex-1"
+            @update:model-value="(value: number[] | undefined) => audioStore.updateAudioSpeed(value?.[0] || 1.0)"
+          />
+          <span class="text-sm text-muted-foreground w-12 text-right">
+            {{ audioStore.audioSpeed }}x
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-interface IAudioSettingsProps {
-  autoplay: boolean;
-  defaultVolume: number;
-  defaultSpeed: number;
-}
+import { useAudioStore } from "~/store/audio";
+import Switch from "~/components/ui/switch/Switch.vue";
+import Slider from "~/components/ui/slider/Slider.vue";
+import Label from "~/components/ui/label/Label.vue";
 
-interface IAudioSettingsEmits {
-  (e: "update:autoplay", value: boolean): void;
-  (e: "update:defaultVolume", value: number): void;
-  (e: "update:defaultSpeed", value: number): void;
-}
-
-const props = defineProps<IAudioSettingsProps>();
-const emit = defineEmits<IAudioSettingsEmits>();
-
-const updateDefaultVolume = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const volume = parseFloat(target.value);
-  emit("update:defaultVolume", volume);
-};
-
-const updateDefaultSpeed = (value: any) => {
-  if (value && typeof value === 'string') {
-    emit("update:defaultSpeed", parseFloat(value));
-  }
-};
+const audioStore = useAudioStore();
 </script>

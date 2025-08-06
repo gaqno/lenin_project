@@ -1,6 +1,6 @@
 <template>
   <CalendarGridRow :class="cn('flex', props.class)" v-bind="forwardedProps">
-    <slot></slot>
+    <slot />
   </CalendarGridRow>
 </template>
 

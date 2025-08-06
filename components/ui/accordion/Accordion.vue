@@ -1,6 +1,6 @@
 <template>
   <AccordionRoot v-bind="forwarded">
-    <slot></slot>
+    <slot />
   </AccordionRoot>
 </template>
 

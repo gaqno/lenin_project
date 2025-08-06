@@ -2,7 +2,9 @@
   <Card class="mb-4 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg">
     <CardHeader>
       <div class="flex items-start space-x-4">
-        <Icon name="mdi:star-four-points-small" class="h-8 w-8 text-primary" />
+        <div class="flex-shrink-0">
+          <img src="/lenin_profile.jpg" alt="Lenin" class="h-28 w-28 rounded-full object-cover">
+        </div>
         <div class="flex-1">
           <h2 class="text-lg font-semibold text-foreground">
             Olá! Eu sou LeninGPT
@@ -15,9 +17,14 @@
     </CardHeader>
     <CardContent>
       <div class="grid gap-2">
-        <Button v-for="tip in quickTips" :key="tip" variant="outline"
+        <Button
+          v-for="tip in quickTips"
+          :key="tip"
+          variant="outline"
           class="justify-start text-left h-auto p-4 bg-background/60 hover:bg-background/80 border-border/40 hover:border-border/60 text-foreground font-medium"
-          :disabled="isLoading" @click="handleTipClick(tip)">
+          :disabled="isLoading"
+          @click="handleTipClick(tip)"
+        >
           {{ tip }}
         </Button>
       </div>

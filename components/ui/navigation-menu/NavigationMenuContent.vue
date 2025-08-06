@@ -6,7 +6,7 @@
       props.class,
     )"
   >
-    <slot></slot>
+    <slot />
   </NavigationMenuContent>
 </template>
 

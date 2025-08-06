@@ -3,7 +3,7 @@
     :class="cn('grid gap-2', props.class)"
     v-bind="forwarded"
   >
-    <slot></slot>
+    <slot />
   </RadioGroupRoot>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <CalendarGridHead v-bind="props">
-    <slot></slot>
+    <slot />
   </CalendarGridHead>
 </template>
 

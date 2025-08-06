@@ -1,6 +1,6 @@
 <template>
   <ToastDescription :class="cn('text-sm opacity-90', props.class)" v-bind="delegatedProps">
-    <slot></slot>
+    <slot />
   </ToastDescription>
 </template>
 

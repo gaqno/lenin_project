@@ -6,7 +6,7 @@
       props.class,
     )"
   >
-    <slot></slot>
+    <slot />
     <SelectIcon as-child>
       <ChevronDown class="w-4 h-4 opacity-50 shrink-0" />
     </SelectIcon>

@@ -3,7 +3,7 @@
     :class="cn('w-full border-collapse space-y-1', props.class)"
     v-bind="forwardedProps"
   >
-    <slot></slot>
+    <slot />
   </CalendarGrid>
 </template>
 

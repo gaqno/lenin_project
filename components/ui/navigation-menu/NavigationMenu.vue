@@ -3,7 +3,7 @@
     v-bind="forwarded"
     :class="cn('relative z-10 flex max-w-max flex-1 items-center justify-center', props.class)"
   >
-    <slot></slot>
+    <slot />
     <NavigationMenuViewport />
   </NavigationMenuRoot>
 </template>

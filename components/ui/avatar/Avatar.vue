@@ -1,6 +1,6 @@
 <template>
   <AvatarRoot :class="cn(avatarVariant({ size, shape }), props.class)">
-    <slot></slot>
+    <slot />
   </AvatarRoot>
 </template>
 

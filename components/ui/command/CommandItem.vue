@@ -9,7 +9,7 @@
       filterState.search = ''
     }"
   >
-    <slot></slot>
+    <slot />
   </ListboxItem>
 </template>
 

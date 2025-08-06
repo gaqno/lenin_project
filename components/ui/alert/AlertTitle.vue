@@ -1,6 +1,6 @@
 <template>
   <h5 :class="cn('mb-1 font-medium leading-none tracking-tight', props.class)">
-    <slot></slot>
+    <slot />
   </h5>
 </template>
 

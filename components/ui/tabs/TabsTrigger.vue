@@ -7,7 +7,7 @@
     )"
   >
     <span class="truncate">
-      <slot></slot>
+      <slot />
     </span>
   </TabsTrigger>
 </template>

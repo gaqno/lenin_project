@@ -1,6 +1,6 @@
 <template>
   <AvatarFallback v-bind="props">
-    <slot></slot>
+    <slot />
   </AvatarFallback>
 </template>
 

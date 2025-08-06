@@ -11,7 +11,7 @@
         <Check class="h-4 w-4" />
       </ContextMenuItemIndicator>
     </span>
-    <slot></slot>
+    <slot />
   </ContextMenuCheckboxItem>
 </template>
 

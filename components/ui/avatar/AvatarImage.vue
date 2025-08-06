@@ -1,6 +1,6 @@
 <template>
   <AvatarImage v-bind="props" class="h-full w-full object-cover">
-    <slot></slot>
+    <slot />
   </AvatarImage>
 </template>
 

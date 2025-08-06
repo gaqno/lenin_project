@@ -6,7 +6,7 @@
       props.class,
     )"
   >
-    <slot></slot>
+    <slot />
     <ChevronRight class="ml-auto h-4 w-4" />
   </DropdownMenuSubTrigger>
 </template>

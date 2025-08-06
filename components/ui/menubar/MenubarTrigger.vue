@@ -8,7 +8,7 @@
       )
     "
   >
-    <slot></slot>
+    <slot />
   </MenubarTrigger>
 </template>
 

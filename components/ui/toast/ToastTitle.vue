@@ -1,6 +1,6 @@
 <template>
   <ToastTitle v-bind="delegatedProps" :class="cn('text-sm font-semibold [&+div]:text-xs', props.class)">
-    <slot></slot>
+    <slot />
   </ToastTitle>
 </template>
 

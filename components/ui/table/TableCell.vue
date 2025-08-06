@@ -7,7 +7,7 @@
       )
     "
   >
-    <slot></slot>
+    <slot />
   </td>
 </template>
 

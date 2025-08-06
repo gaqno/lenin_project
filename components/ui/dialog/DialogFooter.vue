@@ -7,7 +7,7 @@
       )
     "
   >
-    <slot></slot>
+    <slot />
   </div>
 </template>
 

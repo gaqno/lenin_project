@@ -4,7 +4,7 @@
     :class="cn(toastVariants({ variant }), props.class)"
     @update:open="onOpenChange"
   >
-    <slot></slot>
+    <slot />
   </ToastRoot>
 </template>
 
