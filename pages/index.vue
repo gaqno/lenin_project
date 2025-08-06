@@ -310,6 +310,16 @@ onMounted(() => {
   document.title = "LeninGPT";
   document.addEventListener("keydown", handleKeydown);
 
+  // Enable autoplay by adding a click listener to the document
+  const enableAutoplay = () => {
+    // This enables autoplay for future audio elements
+    document.removeEventListener('click', enableAutoplay);
+    document.removeEventListener('touchstart', enableAutoplay);
+  };
+
+  document.addEventListener('click', enableAutoplay);
+  document.addEventListener('touchstart', enableAutoplay);
+
   Promise.all([
     fetchGit(),
   ]);

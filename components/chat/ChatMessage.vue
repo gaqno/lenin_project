@@ -4,15 +4,13 @@
       <div class="flex items-start space-x-3">
         <Icon :name="getMessageIcon(message.role)" :class="getMessageIconClass(message.role)" />
         <div class="flex-1 min-w-0">
-          <p class="text-sm break-words leading-relaxed font-medium" :class="getTextClass(message.role)">
+          <p v-if="message.role !== 'audio'" class="text-sm break-words leading-relaxed font-medium"
+            :class="getTextClass(message.role)">
             {{ message.data }}
           </p>
 
           <!-- Audio Player -->
-          <audio v-if="message.role === 'audio'" :src="message.data" controls class="w-full mt-2" preload="metadata">
-            <source :src="message.data" type="audio/mpeg">
-            Seu navegador não suporta o elemento de áudio.
-          </audio>
+          <AudioPlayer v-if="message.role === 'audio'" :audio-url="message.data" :autoplay="true" class="mt-3" />
 
           <!-- Loading Bar -->
           <div v-if="message.role === 'loading'" class="mt-2">
@@ -27,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import AudioPlayer from '~/components/ui/AudioPlayer.vue';
+
 export interface IChatMessage {
   data: string;
   role: string;
