@@ -1,4 +1,4 @@
-import { User } from "~/types/git";
+import type { User } from "~/types";
 
 export const useClientStore = defineStore("client", {
   state: () => ({
@@ -6,10 +6,10 @@ export const useClientStore = defineStore("client", {
   }),
   getters: {},
   actions: {
-    setUser (user: User) {
+    setUser(user: User) {
       this.user = user;
     },
-    getUser () {
+    getUser() {
       return this.user;
     },
   },

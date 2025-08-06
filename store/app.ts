@@ -1,6 +1,6 @@
 export const useAppStore = defineStore("app", {
   state: () => ({
-    darkMode: false,
+    darkMode: true, // Default to dark mode
     loading: false,
     language: "pt",
     sidemenu: false,
@@ -17,19 +17,19 @@ export const useAppStore = defineStore("app", {
   }),
   getters: {},
   actions: {
-    toggleDarkMode () {
+    toggleDarkMode() {
       this.darkMode = !this.darkMode;
     },
-    toggleSidemenu () {
+    toggleSidemenu() {
       this.sidemenu = !this.sidemenu;
     },
-    setLoading (loading: boolean) {
+    setLoading(loading: boolean) {
       this.loading = loading;
     },
-    setModal (modal: { show: boolean; title: string; content: string }) {
+    setModal(modal: { show: boolean; title: string; content: string }) {
       this.modal = modal;
     },
-    toggleLanguage () {
+    toggleLanguage() {
       const langs = ["pt", "en", "cn"];
       const index = langs.indexOf(this.language);
       this.language = langs[(index + 1) % langs.length];

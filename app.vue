@@ -1,19 +1,20 @@
-]<template>
+<template>
   <NuxtLayout>
-    <div>
-      <NuxtPage />
-      <LoadingComponent v-if="app.loading" />
-    </div>
+    <NuxtPage />
   </NuxtLayout>
 </template>
 
 <script setup>
-import { useAppStore } from "./store/app";
 import "./global.css";
 
-const app = useAppStore();
 useHead({ title: "Lenin GPT" });
 
+// Initialize theme with dark as default
+const { initializeTheme } = useTheme();
+
+onMounted(() => {
+  initializeTheme();
+});
 </script>
 
 <style>

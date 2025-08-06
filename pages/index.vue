@@ -1,213 +1,141 @@
 <template>
-  <main class="flex flex-col">
-    <span class="flex flex-row">
-      <label
-        for="my-drawer"
-        class="ml-4 btn btn-ghost drawer-button my-2"
-        @click.prevent="app.toggleSidemenu()"
-      >
-        <Icon name="mdi:bookshelf" size="2em" />
-        <span class="ml-2">
-          Lenin GPT
-        </span>
-      </label>
-      <div class="drawer-side ml-auto">
-        <label for="my-drawer-3" class="drawer-overlay"></label>
-        <ul class="menu flex flex-row p-4 h-full ml-auto">
-          <!-- Sidebar content here -->
-          <li><a><Icon name="mdi:flag-outline-variant" size="1.5em" class="m-1" /></a></li>
-          <li>
-            <div class="avatar">
-              <a href="https://www.github.com/gaqno" target="_blank" class="w-8 rounded">
-                <img :src="client.user.avatar_url" alt="A">
-              </a>
+  <!-- <ToastProvider> -->
+  <main class="flex flex-col h-screen bg-background relative">
+    <!-- Header -->
+    <ChatHeader :user="client.user" @show-about="showAboutDialog = true" />
+
+    <div class="flex flex-1 relative">
+      <!-- Main Content -->
+      <section class="flex-1 flex flex-col min-h-0 relative z-10">
+        <!-- Chat Container with Overflow - Fixed height to leave space for input -->
+        <div
+          class="flex-1 overflow-y-auto p-4 relative max-h-[calc(100vh-12.5rem)] bg-[url('https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center scrollbar-thin">
+          <!-- Overlay for better text readability -->
+          <div class="absolute inset-0 backdrop-blur-sm" />
+
+          <!-- Content with relative positioning to appear above overlay -->
+          <div class="relative z-10">
+            <!-- Welcome Card -->
+            <WelcomeCard :is-loading="loadingMessage || loadingAudio" @tip-click="handleTips" />
+
+            <!-- Chat Messages -->
+            <div ref="chatContainer" class="space-y-4">
+              <TransitionGroup enter-active-class="transition ease-out duration-300 transform"
+                enter-from-class="translate-y-4 opacity-0" enter-to-class="translate-y-0 opacity-100"
+                leave-active-class="transition ease-in duration-300 transform"
+                leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-4 opacity-0">
+                <ChatMessage v-for="(message, index) in responseStream" :key="`response_${index}`" :message="message" />
+              </TransitionGroup>
             </div>
-          </li>
-        </ul>
-      </div>
-    </span>
 
-    <div class="flex">
-      <aside>
-        <Transition
-          :appear="app.sidemenu"
-          enter-active-class="transition ease-out duration-300 transform"
-          enter-from-class="-translate-x-full"
-          enter-to-class="translate-x-0"
-          leave-active-class="transition ease-in duration-100 transform"
-          leave-from-class="translate-x-0"
-          leave-to-class="-translate-x-100"
-        >
-          <div v-if="app.sidemenu" class="drawer-side">
-            <label for="my-drawer" class="drawer-overlay"></label>
-            <ul class="menu p-4 h-full text-base-content">
-              <!-- Sidebar content here -->
-              <li>
-                <a @click.prevent="clearConversation">
-                  <Icon name="mdi:delete-empty-outline" />
-                  <span class="whitespace-nowrap">
-                    Limpar conversa
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a @click.prevent="pushUpdates">
-                  <Icon name="mdi:update" />
-                  <span>Atualizações</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </Transition>
-      </aside>
-
-      <section :class="[!app.sidemenu ? 'min-w-[95vw]' : 'min-w-[70vw]', 'mx-2 min-h-[86vh] flex flex-col justify-between px-4 text-black rounded-xl p-4 bg-[url(https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80)]'] ">
-        <article class="w-[50vw] w-full pt-auto bg-slate-800/80 rounded-xl p-4 sm:p-6 lg:p-8">
-          <div class="flex mb-4 items-start sm:gap-8">
-            <Icon name="mdi:star-four-points-small" class="text-6xl text-white" />
-            <div class="w-full text-sm">
-              <p class="text-white pr-6">
-                Olá! Eu sou LeninGPT, um bot que tenta encarnar Vladimir Ilyich Ulianov.
-              </p>
-              <p class="text-white">
-                Pergunte-me qualquer coisa!
-              </p>
-
-              <div class="mt-4 text-blue-400">
-                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('O que é socialismo?')">
-                  O que é socialismo?
-                </p>
-                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('Quem é você, como era seu bairro e onde morou?')">
-                  Quem é você, como era seu bairro?
-                </p>
-                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('O socialismo deu certo?')">
-                  O socialismo deu certo?
-                </p>
-                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('Por que ser socialista?')">
-                  Por que ser socialista?
-                </p>
-                <p :class="[loadingAudio || loadingMessage && 'cursor-progress', 'hover:underline hover:cursor-pointer']" @click.prevent="handleTips('Albert Einstein era um socialista?')">
-                  Albert Einstein era um socialista?
-                </p>
-              </div>
+            <!-- Loading Spinner at bottom of chat -->
+            <div v-if="loadingMessage || loadingAudio" class="flex justify-center items-center py-8 mt-4">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+              <span class="ml-2 text-sm text-muted-foreground">Processando...</span>
             </div>
           </div>
-        </article>
-
-        <div ref="chatContainer" class="overflow-y-auto overflow-x-hidden max-h-[50vh] scrollbar scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 mt-2 my-6">
-          <TransitionGroup
-            enter-active-class="transition ease-out duration-300 transform"
-            enter-from-class="translate-x-full"
-            enter-to-class="translate-x-0"
-            leave-active-class="transition ease-in duration-300 transform"
-            leave-from-class="translate-x-0"
-            leave-to-class="translate-x-full"
-          >
-            <div
-              v-for="res, ind in responseStream"
-              :key="`response_${ind}`"
-              class="flex mb-auto items-start items-center my-2 sm:gap-8 w-[50vw] w-full pt-auto bg-slate-800/50 rounded-xl p-4 sm:p-6 lg:p-8"
-            >
-              <Icon v-if="res.role === 'user'" name="mdi:star-four-points-small" class="text-6xl text-white" />
-              <Icon v-if="res.role === 'warn'" name="mdi:headset" class="text-3xl text-white" />
-              <Icon v-else-if="res.role === 'loading'" :name="res.data" class="text-3xl text-white" />
-              <Icon v-else name="mdi:bookshelf" class="text-3xl mr-4  md:mr-0 text-white" />
-              <div v-if="res.role === 'sys' || res.role === 'user' || res.role === 'warn'" class="w-full">
-                <p class="text-white pr-6 text-xs md:text-base">
-                  {{ res.data }}
-                </p>
-              </div>
-              <audio v-if="res.role === 'audio'" autoPlay controls>
-                <source v-if="res.data" :src="res.data" type="audio/mpeg">
-              </audio>
-              <div v-if="res.role === 'loading'" class="w-full flex flex-row gap-x-6">
-                <progress class="progress w-full"></progress>
-              </div>
-            </div>
-          </TransitionGroup>
         </div>
 
-        <article class="w-[20vw] w-full bg-slate-800/90 rounded-xl p-4 sm:p-6 lg:p-8">
-          <div class="flex items-start sm:gap-8">
-            <div class="w-full mt-auto">
-              <textarea
-                v-model="question"
-                class="w-full text-sm h-12 bg-black/10 text-white mt-2 p-2 border-0 rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Pergunte-me algo"
-                @keyup.enter="ask"
-              ></textarea>
-            </div>
-
-            <button class="btn btn-ghost mt-4" @click="ask">
-              <Icon
-                name="mdi:send-outline"
-                :disabled="loadingMessage || !question"
-                class="text-white"
-                size="2em"
-              />
-            </button>
-            <button class="btn btn-ghost mt-4" @click="responseStream = []">
-              <Icon
-                name="mdi:trash-can-outline"
-                class="text-white"
-                size="2em"
-              />
-            </button>
-          </div>
-        </article>
+        <!-- Fixed Input Area at Bottom - Outside the scroll container -->
+        <ChatInput :is-loading="loadingMessage || loadingAudio" @submit="ask" @clear="clearMessages" />
       </section>
     </div>
-    <div class="bg-slate-900 mt-4">
-      <footer class="grid grid-cols-6 mt-6 p-8 ">
-        <span class="col-span-4 m-1 text-xs">
-          <p>Essa aplicação foi feita com Vue3, TailwindCSS, Vite e OpenAI.</p>
-          <p>Essa aplicação gera custos, se você gostou e quer ajudar a manter o projeto no ar, considere fazer uma doação.</p>
-        </span>
-        <a href="https://www.buymeacoffee.com/gaqno" target="_blank" class="col-span-2">
-          <img
-            src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-            alt="Buy Me A Coffee"
-            height="60"
-            class="mt-6 mx-auto"
-            width="217"
-          >
-        </a>
-      </footer>
-    </div>
+
+    <!-- About Dialog -->
+    <Dialog :open="showAboutDialog" @update:open="showAboutDialog = false">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Sobre Lenin GPT</DialogTitle>
+          <DialogDescription>
+            Uma IA inspirada nos pensamentos revolucionários de Vladimir Lenin.
+          </DialogDescription>
+        </DialogHeader>
+        <div class="space-y-4">
+          <div>
+            <h3 class="font-semibold mb-2">
+              Funcionalidades:
+            </h3>
+            <ul class="space-y-1 text-sm text-muted-foreground">
+              <li>• Chat inteligente com IA</li>
+              <li>• Respostas em áudio</li>
+              <li>• Modo escuro/claro</li>
+              <li>• Interface responsiva</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2">
+              Desenvolvido por:
+            </h3>
+            <p class="text-sm text-muted-foreground">
+              Gaqno - Revolução Digital
+            </p>
+          </div>
+          <div class="flex space-x-2">
+            <Button variant="outline" size="sm" as-child>
+              <a href="https://www.github.com/gaqno" target="_blank" rel="noopener noreferrer">
+                <Icon name="mdi:github" class="h-4 w-4 mr-2" />
+                GitHub
+              </a>
+            </Button>
+            <Button variant="outline" size="sm" as-child>
+              <a href="https://www.buymeacoffee.com/gaqno" target="_blank" rel="noopener noreferrer">
+                <Icon name="mdi:coffee" class="h-4 w-4 mr-2" />
+                Buy Me a Coffee
+              </a>
+            </Button>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button @click="showAboutDialog = false">
+            Fechar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </main>
+  <!-- </ToastProvider> -->
 </template>
 
 <script setup lang="ts">
+// Imports
 import { useAppStore } from "~/store/app";
 import { useClientStore } from "~/store/client";
-import { User } from "~/types/git";
+import type { User } from "~/types";
 import { useChatCompletion } from "~/service/openai";
 import { postElevenLabsTextToSpeech } from "~/service/elevenlabs";
+import type { IChatMessage } from "~/components/chat/ChatMessage.vue";
+import { useToast } from "~/composables/useToast";
 
-interface IResponse {
-  data: string;
-  role: string;
-}
+// Component imports
+import ChatHeader from "~/components/chat/ChatHeader.vue";
+// import ChatSidebar from "~/components/chat/ChatSidebar.vue";
+import WelcomeCard from "~/components/chat/WelcomeCard.vue";
+import ChatMessage from "~/components/chat/ChatMessage.vue";
+import ChatInput from "~/components/chat/ChatInput.vue";
+
+// Stores
 const app = useAppStore();
 const client = useClientStore();
+const { showSuccess, showError, showInfo } = useToast();
+
+// Reactive state
 const loadingMessage = ref(false);
 const loadingAudio = ref(false);
-const chatContainer = ref({} as HTMLDivElement);
-const question = ref("");
-const responseStream = ref([] as IResponse[]);
-const updates = [
-  {
-    date: "02/07/23",
-    problem: "Ao responder tréplica, ele perde o contexto",
-    solution: "working",
-  },
-  {
-    date: "19/10/23",
-    problem: "feat: resposta de áudio",
-    solution: "working",
-  },
-];
+const chatContainer = ref<HTMLDivElement>();
+const responseStream = ref<IChatMessage[]>([]);
+const showAboutDialog = ref(false);
+const showCommandPalette = ref(false);
 
+// Settings state
+const settings = ref({
+  darkMode: false,
+  audioEnabled: true,
+  notificationsEnabled: true,
+  audioSpeed: 1.0,
+  language: "pt",
+});
+
+// Methods
 const fetchGit = () => {
   app.setLoading(true);
   return new Promise((resolve, reject) => {
@@ -231,93 +159,135 @@ const fetchGit = () => {
   });
 };
 
-const ask = () => {
-  if (question.value === "") { return; }
-  const questionText = question.value;
-  question.value = "";
-  responseStream.value.push({ data: questionText, role: "user" } as never);
+const ask = (questionText: string) => {
+  responseStream.value.push({ data: questionText, role: "user" });
+
+  // Set loading states
+  loadingMessage.value = true;
   app.setLoading(true);
+
+  if (settings.value.notificationsEnabled) {
+    showInfo("Pergunta enviada", "Processando sua pergunta...");
+  }
+
   useChatCompletion(questionText)
     .then((data: any) => {
       const { message } = data;
       loadingMessage.value = false;
       loadingAudio.value = true;
-      responseStream.value.push({ data: message.content, role: "sys" } as never);
-      responseStream.value.push({ data: "iconoir:voice-circle", role: "loading" } as never);
+      responseStream.value.push({ data: message.content, role: "sys" });
+      responseStream.value.push({ data: "mdi:loading", role: "loading" });
       app.setLoading(false);
-      postElevenLabsTextToSpeech({
-        headers: ["audio/mpeg"],
-        params: {
-          optimize_streaming_latency: 0,
-          output_format: "mp3_44100_128",
-        },
-        payload: {
-          text: data.message.content || "",
-          model_id: "eleven_multilingual_v2",
-          voice_settings: {
-            stability: 0,
-            similarity_boost: 0,
-            style: 0,
-            use_speaker_boost: true,
+
+      if (settings.value.audioEnabled) {
+        postElevenLabsTextToSpeech({
+          headers: ["audio/mpeg"],
+          params: {
+            optimize_streaming_latency: 0,
+            output_format: "mp3_44100_128",
           },
-        },
-      })
-        .then((audio) => {
-          responseStream.value.pop();
-          const audioBlob = new Blob([audio], { type: "audio/mpeg" });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          responseStream.value.push({ data: audioUrl, role: "audio" } as never);
-          loadingAudio.value = false;
+          payload: {
+            text: data.message.content || "",
+            model_id: "eleven_multilingual_v2",
+            voice_settings: {
+              stability: 0,
+              similarity_boost: 0,
+              style: 0,
+              use_speaker_boost: true,
+            },
+          },
         })
-        .catch((err) => {
-          console.warn(err);
-          loadingAudio.value = false;
-          responseStream.value.pop();
-          responseStream.value.push({ data: "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida", role: "warn" } as never);
-        });
+          .then((audio) => {
+            responseStream.value.pop();
+            const audioBlob = new Blob([audio], { type: "audio/mpeg" });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            responseStream.value.push({ data: audioUrl, role: "audio" });
+            loadingAudio.value = false;
+
+            if (settings.value.notificationsEnabled) {
+              showSuccess("Resposta completa", "Áudio gerado com sucesso!");
+            }
+          })
+          .catch((_err) => {
+            loadingAudio.value = false;
+            responseStream.value.pop();
+            responseStream.value.push({
+              data: "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida",
+              role: "warn",
+            });
+
+            if (settings.value.notificationsEnabled) {
+              showError("Erro no áudio", "Falha ao gerar áudio da resposta");
+            }
+          });
+      } else {
+        responseStream.value.pop();
+        if (settings.value.notificationsEnabled) {
+          showSuccess("Resposta completa", "Resposta processada com sucesso!");
+        }
+      }
     })
-    .catch(err => console.warn(err));
+    .catch((_err) => {
+      if (settings.value.notificationsEnabled) {
+        showError("Erro", "Falha ao processar sua pergunta");
+      }
+    });
 };
 
 const handleTips = (text: string) => {
-  question.value = text;
-  ask();
+  ask(text);
 };
 
-const clearConversation = () => {
+const clearMessages = () => {
   responseStream.value = [];
-  app.$patch({ sidemenu: false });
+
+  if (settings.value.notificationsEnabled) {
+    showInfo("Mensagens limpas", "Todas as mensagens foram removidas");
+  }
 };
 
-const pushUpdates = () => {
-  app.$patch({ sidemenu: false });
-  responseStream.value.push({ data: "ATUALIZAÇÕES", role: "sys" } as never);
-  updates.forEach((update) => {
-    responseStream.value.push({
-      data: `
-      Data: ${update.date} ~ 
-      Problema: ${update.problem} ~
-      Atualização: ${update.solution === "working" ? "CORRIGIDO" : "NÃO CORRIGIDO"}
-      `,
-      role: "sys",
-    } as never);
-  });
+// Keyboard shortcuts
+const handleKeydown = (event: KeyboardEvent) => {
+  // Cmd/Ctrl + K to open command palette
+  if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+    event.preventDefault();
+    showCommandPalette.value = true;
+  }
+
+  // Cmd/Ctrl + L to clear chat
+  if ((event.metaKey || event.ctrlKey) && event.key === "l") {
+    event.preventDefault();
+    clearMessages();
+  }
 };
 
+// Watchers
 watchEffect(() => {
   if (responseStream.value && responseStream.value.length > 0) {
-    chatContainer.value.scroll({
-      top: chatContainer.value.scrollHeight + 1000,
-      behavior: "smooth",
+    nextTick(() => {
+      // Scroll the chat container to bottom
+      const chatContainer = document.querySelector(".overflow-y-auto");
+      if (chatContainer) {
+        chatContainer.scrollTo({
+          top: chatContainer.scrollHeight,
+          behavior: "smooth",
+        });
+      }
     });
   }
 });
 
+// Lifecycle
 onMounted(() => {
   document.title = "LeninGPT";
+  document.addEventListener("keydown", handleKeydown);
+
   Promise.all([
     fetchGit(),
   ]);
 });
 
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeydown);
+});
 </script>
