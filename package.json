@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.0",
+    "@supabase/supabase-js": "^2.53.0",
     "@types/aos": "^3.0.4",
     "@vee-validate/zod": "^4.15.1",
     "@vercel/analytics": "^1.0.1",
