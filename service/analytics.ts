@@ -1,12 +1,17 @@
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseClient } from "~/lib/supabase";
 
-export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
+export interface IAnalyticsData {
+  totalQuestions: number | null;
+  metrics: {
+    byCountry: Record<string, number>;
+    byBrowser: Record<string, number>;
+    byDevice: Record<string, number>;
+    byOS: Record<string, number>;
+  };
+}
 
-  const supabase = createClient(
-    config.SUPABASE_URL!,
-    config.SUPABASE_ANON_KEY!
-  );
+export const useAnalytics = async (): Promise<IAnalyticsData> => {
+  const supabase = createSupabaseClient();
 
   try {
     // Get total questions
@@ -74,9 +79,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error) {
     console.error('Analytics error:', error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch analytics",
-    });
+    throw new Error('Falha ao buscar analytics.');
   }
-}); 
+}; 

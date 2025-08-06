@@ -38,8 +38,8 @@ export default defineNuxtConfig({
       ELEVENLABS_TOKEN: process.env.ELEVENLABS_TOKEN,
       ELEVENLABS_VOICE_ID: process.env.ELEVENLABS_VOICE_ID,
       ELEVENLABS_BASE_URL: process.env.ELEVENLABS_BASE_URL,
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     },
-    SUPABASE_URL: process.env.SUPABASE_URL,
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
   },
 });
