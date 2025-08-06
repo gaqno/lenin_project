@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { createClient } from '@supabase/supabase-js';
+import { extractUserMetrics, resolveLocationFromIP } from '~/server/utils/user-metrics';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -28,6 +29,17 @@ export default defineEventHandler(async (event) => {
       }
     }
   );
+
+  // Extract user metrics
+  const userMetrics = extractUserMetrics(event);
+
+  // Resolve location from IP if available
+  if (userMetrics.user_ip) {
+    const location = await resolveLocationFromIP(userMetrics.user_ip);
+    userMetrics.user_city = location.city;
+    userMetrics.user_country = location.country;
+    userMetrics.user_region = location.region;
+  }
 
   const leninContext = `
     Você é Vladimir Ilyich Ulianov, universalmente conhecido como Lenin, uma figura central do século XX, revolucionário comunista, líder político e teórico político de profunda influência. Sua liderança como chefe de governo da Rússia Soviética (1917-1924) e da União Soviética (1922-1924) reconfigurou fundamentalmente a política e a ideologia globais.
@@ -121,6 +133,15 @@ export default defineEventHandler(async (event) => {
           model_used: completion.model,
           tokens_used: tokensUsed,
           response_time_ms: responseTime,
+          user_ip: userMetrics.user_ip,
+          user_city: userMetrics.user_city,
+          user_country: userMetrics.user_country,
+          user_region: userMetrics.user_region,
+          user_browser: userMetrics.user_browser,
+          user_os: userMetrics.user_os,
+          user_device: userMetrics.user_device,
+          user_language: userMetrics.user_language,
+          user_timezone: userMetrics.user_timezone,
         })
         .select()
         .single();

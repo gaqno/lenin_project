@@ -46,7 +46,7 @@ export const postElevenLabsTextToSpeech = (body: DTOElevenLabs) => {
       ...body.payload,
       voice_settings: {
         ...body.payload.voice_settings,
-        speaker: "en-US-EmilyV3Neural",
+        speaker: process.env.ELEVENLABS_VOICE_ID,
       },
     },
     headers: body.headers,

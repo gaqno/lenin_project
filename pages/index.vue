@@ -110,6 +110,7 @@ import { useChatCompletion } from "~/service/openai";
 import { postElevenLabsTextToSpeech } from "~/service/elevenlabs";
 import type { IChatMessage } from "~/components/chat/ChatMessage.vue";
 import { useToast } from "~/composables/useToast";
+import { useUserMetrics } from "~/composables/useUserMetrics";
 
 // Component imports
 import ChatHeader from "~/components/chat/ChatHeader.vue";
@@ -123,6 +124,7 @@ import ChatCommand from "~/components/chat/ChatCommand.vue";
 const app = useAppStore();
 const client = useClientStore();
 const { showSuccess, showError, showInfo } = useToast();
+const { setMetricsHeaders } = useUserMetrics();
 
 // Reactive state
 const loadingMessage = ref(false);
