@@ -160,6 +160,10 @@ const fetchGit = () => {
 };
 
 const ask = (questionText: string) => {
+  // Track the question
+  const { $trackQuestion } = useNuxtApp();
+  $trackQuestion(questionText);
+
   responseStream.value.push({ data: questionText, role: "user" });
 
   // Set loading states
