@@ -1,22 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "nuxt.config.ts",
-      "use": "@nuxtjs/vercel-builder",
-      "config": {
-        "serverFiles": [
-          "server/**"
-        ]
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
   "env": {
     "NODE_VERSION": "22"
   }
