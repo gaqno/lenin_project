@@ -12,7 +12,6 @@ export default defineNuxtConfig({
     "nuxt-swiper",
     "shadcn-nuxt",
   ],
-  plugins: [{ src: "~/plugins/vercel.ts", mode: "client" }],
   components: true,
   shadcn: {
     /**

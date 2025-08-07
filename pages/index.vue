@@ -9,8 +9,7 @@
       <section class="flex-1 flex flex-col min-h-0 relative z-10">
         <!-- Chat Container with Overflow - Fixed height to leave space for input -->
         <div
-          class="flex-1 overflow-y-auto p-4 relative max-h-[calc(100vh-12.5rem)] bg-[url('https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center"
-        >
+          class="flex-1 overflow-y-auto p-4 relative max-h-[calc(100vh-14rem)] bg-[url('https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center">
           <!-- Overlay for better text readability -->
           <div class="absolute inset-0 backdrop-blur-sm" />
 
@@ -21,20 +20,12 @@
 
             <!-- Chat Messages -->
             <div ref="chatContainer" class="space-y-4">
-              <TransitionGroup
-                enter-active-class="transition ease-out duration-300 transform"
-                enter-from-class="translate-y-4 opacity-0"
-                enter-to-class="translate-y-0 opacity-100"
+              <TransitionGroup enter-active-class="transition ease-out duration-300 transform"
+                enter-from-class="translate-y-4 opacity-0" enter-to-class="translate-y-0 opacity-100"
                 leave-active-class="transition ease-in duration-300 transform"
-                leave-from-class="translate-y-0 opacity-100"
-                leave-to-class="translate-y-4 opacity-0"
-              >
-                <ChatMessage
-                  v-for="(message, index) in responseStream"
-                  :key="`response_${index}`"
-                  :message="message"
-                  :autoplay-enabled="audioStore.autoplayAudio"
-                />
+                leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-4 opacity-0">
+                <ChatMessage v-for="(message, index) in responseStream" :key="`response_${index}`" :message="message"
+                  :autoplay-enabled="audioStore.autoplayAudio" />
               </TransitionGroup>
             </div>
 
@@ -95,27 +86,18 @@
               <span class="text-sm font-medium">Apoie o Projeto</span>
             </div>
             <div class="ml-7 space-y-2">
-              <a
-                href="https://www.buymeacoffee.com/gaqno"
-                target="_blank"
-                class="flex items-center space-x-2 text-sm text-amber-600 hover:text-amber-700 hover:underline"
-              >
+              <a href="https://www.buymeacoffee.com/gaqno" target="_blank"
+                class="flex items-center space-x-2 text-sm text-amber-600 hover:text-amber-700 hover:underline">
                 <Icon name="mdi:coffee" class="h-4 w-4" />
                 <span>Buy Me a Coffee</span>
               </a>
-              <a
-                href="https://link.mercadopago.com.br/gaqnodevelopment"
-                target="_blank"
-                class="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
-              >
+              <a href="https://link.mercadopago.com.br/gaqnodevelopment" target="_blank"
+                class="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 hover:underline">
                 <Icon name="mdi:credit-card" class="h-4 w-4" />
                 <span>Mercado Pago</span>
               </a>
-              <a
-                href="https://www.github.com/gaqno"
-                target="_blank"
-                class="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-700 hover:underline"
-              >
+              <a href="https://www.github.com/gaqno" target="_blank"
+                class="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-700 hover:underline">
                 <Icon name="mdi:github" class="h-4 w-4" />
                 <span>GitHub do Desenvolvedor</span>
               </a>
@@ -147,16 +129,9 @@
     </Dialog>
 
     <!-- Command Palette -->
-    <ChatCommand
-      :is-open="showCommandPalette"
-      @clear-chat="clearMessages"
-      @show-updates="handleShowUpdates"
-      @show-settings="handleShowSettings"
-      @quick-tip="handleQuickTip"
-      @show-about="showAboutDialog = true"
-      @open-github="handleOpenGitHub"
-      @close="showCommandPalette = false"
-    />
+    <ChatCommand :is-open="showCommandPalette" @clear-chat="clearMessages" @show-updates="handleShowUpdates"
+      @show-settings="handleShowSettings" @quick-tip="handleQuickTip" @show-about="showAboutDialog = true"
+      @open-github="handleOpenGitHub" @close="showCommandPalette = false" />
   </main>
   <!-- </ToastProvider> -->
 </template>
