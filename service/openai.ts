@@ -1,6 +1,7 @@
 import { useUserMetrics } from "~/composables/useUserMetrics";
 import { useClientMetrics } from "~/composables/useClientMetrics";
 import { createSupabaseClient } from "~/lib/supabase";
+import { getCurrentLocalTime, createLocalTimestamp } from "~/lib/utils";
 import { LENIN_CONTEXT } from "./lenin-context";
 
 interface OpenAIResponse {
@@ -74,6 +75,15 @@ Resposta:`
       const supabase = createSupabaseClient();
       const userMetrics = await getClientMetrics();
 
+      // Get current timestamp in user's timezone
+      const userTimezone = userMetrics.user_timezone || 'UTC';
+      const localTime = getCurrentLocalTime(userTimezone);
+      const localTimestamp = createLocalTimestamp(userTimezone);
+
+      console.log('Saving with user timezone:', userTimezone);
+      console.log('Current local time:', localTime);
+      console.log('Local timestamp for database:', localTimestamp);
+
       const { data: dbData, error } = await supabase
         .from('lenin_questions')
         .insert({
@@ -90,6 +100,7 @@ Resposta:`
           user_device: userMetrics.user_device,
           user_language: userMetrics.user_language,
           user_timezone: userMetrics.user_timezone,
+          created_at: localTimestamp, // Save with local timezone
         })
         .select()
         .single();
@@ -104,6 +115,7 @@ Resposta:`
         // Don't throw error here, just log it so the API still works
       } else {
         console.log('Successfully recorded question to database:', dbData);
+        console.log('Recorded at local time:', localTime);
       }
     } catch (dbError) {
       console.error('Database error:', dbError);
