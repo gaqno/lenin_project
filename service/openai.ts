@@ -59,7 +59,22 @@ Resposta:`
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenAI API error response:', errorText);
-      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+      
+      let errorMessage = 'Falha ao processar sua pergunta. Tente novamente.';
+      
+      if (response.status === 429) {
+        errorMessage = 'Muitas requisições. Por favor, aguarde alguns momentos antes de tentar novamente.';
+      } else if (response.status === 401) {
+        errorMessage = 'Erro de autenticação. Verifique as configurações da API.';
+      } else if (response.status === 500) {
+        errorMessage = 'Erro interno do servidor. Tente novamente mais tarde.';
+      } else if (response.status === 503) {
+        errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns instantes.';
+      }
+      
+      const error = new Error(errorMessage) as Error & { statusCode?: number };
+      error.statusCode = response.status;
+      throw error;
     }
 
     const data: OpenAIResponse = await response.json();
@@ -133,7 +148,14 @@ Resposta:`
     };
   } catch (error) {
     console.error('Error calling OpenAI API:', error);
-    throw new Error('Falha ao processar sua pergunta. Tente novamente.');
+    
+    if (error instanceof Error && 'statusCode' in error) {
+      throw error;
+    }
+    
+    const networkError = new Error('Erro de conexão. Verifique sua internet e tente novamente.') as Error & { statusCode?: number };
+    networkError.statusCode = 0;
+    throw networkError;
   }
 };
 

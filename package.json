@@ -27,6 +27,7 @@
     "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vite-pwa/nuxt": "^1.0.7",
     "@vueuse/nuxt": "^10.7.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.57.0",

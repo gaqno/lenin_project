@@ -11,7 +11,36 @@ export default defineNuxtConfig({
     "nuxt-delay-hydration",
     "nuxt-swiper",
     "shadcn-nuxt",
+    "@vite-pwa/nuxt",
   ],
+  pwa: {
+    registerType: "autoUpdate",
+    manifest: {
+      name: "LeninGPT",
+      short_name: "LeninGPT",
+      description: "A digital incarnation of Vladimir Ilyich Lenin",
+      theme_color: "#c41e3a",
+      background_color: "#f4f1ea",
+      display: "standalone",
+      orientation: "portrait",
+      icons: [
+        {
+          src: "/lenin_profile.jpg",
+          sizes: "512x512",
+          type: "image/jpeg",
+          purpose: "any maskable",
+        },
+      ],
+    },
+    workbox: {
+      navigateFallback: "/",
+      globPatterns: ["**/*.{js,css,html,png,svg,ico,jpg,jpeg,ttf}"],
+    },
+    devOptions: {
+      enabled: true,
+      type: "module",
+    },
+  },
   components: true,
   shadcn: {
     /**

@@ -1,17 +1,18 @@
 <template>
   <!-- <ToastProvider> -->
-  <main class="flex flex-col h-screen bg-background relative">
+  <main class="flex flex-col h-[100dvh] bg-background relative overflow-hidden">
     <!-- Header -->
     <ChatHeader :user="client.user" @show-about="showAboutDialog = true" @show-settings="handleShowSettings" />
 
-    <div class="flex flex-1 relative">
+    <div class="flex flex-1 relative min-h-0">
       <!-- Main Content -->
-      <section class="flex-1 flex flex-col min-h-0 relative z-10">
-        <!-- Chat Container with Overflow - Fixed height to leave space for input -->
+      <section class="flex-1 flex flex-col relative z-10 h-full">
+        <!-- Chat Container with Overflow - Flexible height -->
         <div
-          class="flex-1 overflow-y-auto p-4 relative max-h-[calc(100vh-14rem)] bg-[url('https://images.unsplash.com/photo-1599913609289-be5c5c5e9d5b?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center">
-          <!-- Overlay for better text readability -->
-          <div class="absolute inset-0 backdrop-blur-sm" />
+          class="flex-1 overflow-y-auto p-4 relative bg-background bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-background via-muted/10 to-background/80"
+        >
+          <!-- Overlay for texture (optional) -->
+          <div class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')] mix-blend-overlay" />
 
           <!-- Content with relative positioning to appear above overlay -->
           <div class="relative z-10">
@@ -20,12 +21,20 @@
 
             <!-- Chat Messages -->
             <div ref="chatContainer" class="space-y-4">
-              <TransitionGroup enter-active-class="transition ease-out duration-300 transform"
-                enter-from-class="translate-y-4 opacity-0" enter-to-class="translate-y-0 opacity-100"
+              <TransitionGroup
+                enter-active-class="transition ease-out duration-300 transform"
+                enter-from-class="translate-y-4 opacity-0"
+                enter-to-class="translate-y-0 opacity-100"
                 leave-active-class="transition ease-in duration-300 transform"
-                leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-4 opacity-0">
-                <ChatMessage v-for="(message, index) in responseStream" :key="`response_${index}`" :message="message"
-                  :autoplay-enabled="audioStore.autoplayAudio" />
+                leave-from-class="translate-y-0 opacity-100"
+                leave-to-class="translate-y-4 opacity-0"
+              >
+                <ChatMessage
+                  v-for="(message, index) in responseStream"
+                  :key="`response_${index}`"
+                  :message="message"
+                  :autoplay-enabled="audioStore.autoplayAudio"
+                />
               </TransitionGroup>
             </div>
 
@@ -86,18 +95,27 @@
               <span class="text-sm font-medium">Apoie o Projeto</span>
             </div>
             <div class="ml-7 space-y-2">
-              <a href="https://www.buymeacoffee.com/gaqno" target="_blank"
-                class="flex items-center space-x-2 text-sm text-amber-600 hover:text-amber-700 hover:underline">
+              <a
+                href="https://www.buymeacoffee.com/gaqno"
+                target="_blank"
+                class="flex items-center space-x-2 text-sm text-amber-600 hover:text-amber-700 hover:underline"
+              >
                 <Icon name="mdi:coffee" class="h-4 w-4" />
                 <span>Buy Me a Coffee</span>
               </a>
-              <a href="https://link.mercadopago.com.br/gaqnodevelopment" target="_blank"
-                class="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 hover:underline">
+              <a
+                href="https://link.mercadopago.com.br/gaqnodevelopment"
+                target="_blank"
+                class="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              >
                 <Icon name="mdi:credit-card" class="h-4 w-4" />
                 <span>Mercado Pago</span>
               </a>
-              <a href="https://www.github.com/gaqno" target="_blank"
-                class="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-700 hover:underline">
+              <a
+                href="https://www.github.com/gaqno"
+                target="_blank"
+                class="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-700 hover:underline"
+              >
                 <Icon name="mdi:github" class="h-4 w-4" />
                 <span>GitHub do Desenvolvedor</span>
               </a>
@@ -129,9 +147,16 @@
     </Dialog>
 
     <!-- Command Palette -->
-    <ChatCommand :is-open="showCommandPalette" @clear-chat="clearMessages" @show-updates="handleShowUpdates"
-      @show-settings="handleShowSettings" @quick-tip="handleQuickTip" @show-about="showAboutDialog = true"
-      @open-github="handleOpenGitHub" @close="showCommandPalette = false" />
+    <ChatCommand
+      :is-open="showCommandPalette"
+      @clear-chat="clearMessages"
+      @show-updates="handleShowUpdates"
+      @show-settings="handleShowSettings"
+      @quick-tip="handleQuickTip"
+      @show-about="showAboutDialog = true"
+      @open-github="handleOpenGitHub"
+      @close="showCommandPalette = false"
+    />
   </main>
   <!-- </ToastProvider> -->
 </template>
@@ -267,16 +292,20 @@ const ask = (questionText: string) => {
               showSuccess("Resposta completa", "Áudio gerado com sucesso!");
             }
           })
-          .catch((_err) => {
+          .catch((err: any) => {
             loadingAudio.value = false;
             responseStream.value.pop();
+            
+            const errorMessage = err instanceof Error ? err.message : "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida";
+            
             responseStream.value.push({
-              data: "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida",
+              data: errorMessage,
               role: "warn",
             });
 
             if (audioStore.notificationsEnabled) {
-              showError("Erro no áudio", "Falha ao gerar áudio da resposta");
+              const errorTitle = err?.statusCode === 429 ? "Limite de requisições" : "Erro no áudio";
+              showError(errorTitle, errorMessage);
             }
           });
       } else {
@@ -287,9 +316,21 @@ const ask = (questionText: string) => {
         }
       }
     })
-    .catch((_err) => {
+    .catch((err: any) => {
+      loadingMessage.value = false;
+      loadingAudio.value = false;
+      app.setLoading(false);
+      
+      const errorMessage = err instanceof Error ? err.message : "Falha ao processar sua pergunta. Tente novamente.";
+      
+      responseStream.value.push({
+        data: errorMessage,
+        role: "warn",
+      });
+
       if (audioStore.notificationsEnabled) {
-        showError("Erro", "Falha ao processar sua pergunta");
+        const errorTitle = err?.statusCode === 429 ? "Limite de requisições" : "Erro";
+        showError(errorTitle, errorMessage);
       }
     });
 };

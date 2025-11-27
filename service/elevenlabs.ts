@@ -17,20 +17,42 @@ const callApi = async (
 ) => {
   const { public: ENV } = await useRuntimeConfig();
   axios.defaults.baseURL = ENV.ELEVENLABS_BASE_URL;
-  return axios({
-    method,
-    url:
-      axios.defaults.baseURL +
-      endpoint +
-      (data?.params ? "?" + new URLSearchParams(data.params as Record<string, string>).toString() : ""),
-    data: data?.payload,
-    responseType: "arraybuffer",
-    headers: {
-      Accept: data?.headers ? data.headers : "application/json",
-      "Content-Type": "application/json",
-      "xi-api-key": ENV.ELEVENLABS_TOKEN,
-    },
-  }).then((response: any) => response.data);
+  
+  try {
+    const response = await axios({
+      method,
+      url:
+        axios.defaults.baseURL +
+        endpoint +
+        (data?.params ? "?" + new URLSearchParams(data.params as Record<string, string>).toString() : ""),
+      data: data?.payload,
+      responseType: "arraybuffer",
+      headers: {
+        Accept: data?.headers ? data.headers : "application/json",
+        "Content-Type": "application/json",
+        "xi-api-key": ENV.ELEVENLABS_TOKEN,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      const statusCode = error.response.status;
+      let errorMessage = 'Falha ao gerar áudio. Tente novamente.';
+      
+      if (statusCode === 429) {
+        errorMessage = 'Muitas requisições de áudio. Por favor, aguarde alguns momentos.';
+      } else if (statusCode === 401) {
+        errorMessage = 'Erro de autenticação no serviço de áudio.';
+      } else if (statusCode === 500) {
+        errorMessage = 'Erro interno no serviço de áudio. Tente novamente mais tarde.';
+      }
+      
+      const apiError = new Error(errorMessage) as Error & { statusCode?: number };
+      apiError.statusCode = statusCode;
+      throw apiError;
+    }
+    throw error;
+  }
 };
 
 export const getElevenLabsVoices = (params?: Record<string, string | number | boolean>) => {

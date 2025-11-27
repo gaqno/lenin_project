@@ -1,10 +1,10 @@
 <template>
-  <Card :class="messageClass">
+  <Card :class="[messageClass, 'animate-slide-up']">
     <CardContent class="p-4">
       <div class="flex items-start space-x-3">
         <!-- Avatar for system messages -->
-        <div v-if="message.role === 'sys'" class="flex-shrink-0">
-          <img src="/lenin_profile.jpg" alt="Lenin" class="h-8 w-8 rounded-full object-cover">
+        <div v-if="message.role === 'sys'" class="flex-shrink-0 animate-fade-in [animation-delay:300ms]">
+          <img src="/lenin_profile.jpg" alt="Lenin" class="h-10 w-10 rounded-sm border border-muted/50 object-cover sepia-[0.3] shadow-sm">
         </div>
 
         <!-- Icon for other message types -->
@@ -13,7 +13,7 @@
         <div class="flex-1 min-w-0">
           <p
             v-if="message.role !== 'audio'"
-            class="text-sm break-words leading-relaxed font-medium"
+            class="text-sm break-words leading-relaxed font-medium animate-fade-in [animation-delay:150ms] opacity-0 [animation-fill-mode:forwards]"
             :class="getTextClass(message.role)"
           >
             {{ message.data }}
@@ -24,7 +24,7 @@
             v-if="message.role === 'audio'"
             :audio-url="message.data"
             :autoplay="autoplayEnabled"
-            class="mt-3"
+            class="mt-3 animate-fade-in"
           />
 
           <!-- Loading Bar -->
@@ -59,15 +59,15 @@ const props = withDefaults(defineProps<IChatMessageProps>(), {
 const messageClass = computed(() => {
   switch (props.message.role) {
     case "user":
-      return "bg-white/80 border-primary/30 backdrop-blur-sm shadow-md dark:bg-primary/20";
+      return "bg-secondary/30 border-b-2 border-dashed border-primary/20 backdrop-blur-sm shadow-sm mr-8";
     case "sys":
-      return "bg-card/80 border-border/40 backdrop-blur-sm shadow-md";
+      return "bg-card/95 border-l-4 border-double border-primary/60 backdrop-blur-sm shadow-md ml-2";
     case "warn":
-      return "bg-red-50/80 border-red-200/50 backdrop-blur-sm shadow-md dark:bg-destructive/20 dark:border-destructive/30";
+      return "bg-destructive/10 border-l-4 border-destructive/60 backdrop-blur-sm shadow-md";
     case "loading":
       return "bg-muted/30 border-muted/40 backdrop-blur-sm shadow-md";
     case "audio":
-      return "bg-green-50/80 border-green-200/50 backdrop-blur-sm shadow-md dark:bg-success/20 dark:border-success/30";
+      return "bg-success/10 border-success/20 backdrop-blur-sm shadow-md";
     default:
       return "bg-card/80 border-border/40 backdrop-blur-sm shadow-md";
   }
@@ -76,49 +76,49 @@ const messageClass = computed(() => {
 const getMessageIcon = (role: string): string => {
   switch (role) {
     case "user":
-      return "mdi:account";
+      return "mdi:account-tie"; // More formal
     case "sys":
-      return "mdi:bookshelf";
+      return "mdi:fountain-pen-tip"; // Writer/Thinker
     case "warn":
-      return "mdi:alert-circle";
+      return "mdi:alert-decagram";
     case "loading":
       return "mdi:loading";
     case "audio":
-      return "mdi:volume-high";
+      return "mdi:radio"; // Old radio
     default:
-      return "mdi:message";
+      return "mdi:message-text";
   }
 };
 
 const getMessageIconClass = (role: string): string => {
   switch (role) {
     case "user":
-      return "h-5 w-5 text-primary";
+      return "h-6 w-6 text-primary/80";
     case "sys":
-      return "h-5 w-5 text-destructive";
+      return "h-6 w-6 text-primary";
     case "warn":
-      return "h-5 w-5 text-warning";
+      return "h-6 w-6 text-destructive";
     case "loading":
-      return "h-5 w-5 text-muted-foreground animate-spin";
+      return "h-6 w-6 text-muted-foreground animate-spin";
     case "audio":
-      return "h-5 w-5 text-success";
+      return "h-6 w-6 text-success";
     default:
-      return "h-5 w-5 text-muted-foreground";
+      return "h-6 w-6 text-muted-foreground";
   }
 };
 
 const getTextClass = (role: string): string => {
   switch (role) {
     case "user":
-      return "text-primary dark:text-secondary-foreground";
+      return "text-foreground font-serif italic";
     case "sys":
-      return "text-foreground";
+      return "text-foreground font-serif text-lg leading-7";
     case "warn":
-      return "text-red-700 dark:text-destructive-foreground";
+      return "text-destructive font-bold";
     case "loading":
       return "text-muted-foreground";
     case "audio":
-      return "text-green-700 dark:text-success-foreground";
+      return "text-success";
     default:
       return "text-foreground";
   }
