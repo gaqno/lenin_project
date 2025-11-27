@@ -1,4 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
+import { config } from "dotenv";
+
+config();
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-11-27",
