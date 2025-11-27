@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NUXT_PUBLIC_API_URL;
+import { getApiUrl } from "~/lib/api-config";
 
 export interface IDTOElevenLabs {
   headers?: string[];
@@ -13,7 +13,8 @@ export interface IDTOElevenLabs {
 export const postElevenLabsTextToSpeech = async (
   body: IDTOElevenLabs,
 ): Promise<ArrayBuffer> => {
-  const response = await fetch(`${API_BASE_URL}/elevenlabs/text-to-speech`, {
+  const apiUrl = getApiUrl();
+  const response = await fetch(`${apiUrl}/elevenlabs/text-to-speech`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

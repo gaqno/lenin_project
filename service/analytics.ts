@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NUXT_PUBLIC_API_URL;
+import { getApiUrl } from "~/lib/api-config";
 
 export interface IAnalyticsData {
   totalQuestions: number | null;
@@ -11,7 +11,8 @@ export interface IAnalyticsData {
 }
 
 export const useAnalytics = async (): Promise<IAnalyticsData> => {
-  const response = await fetch(`${API_BASE_URL}/metrics/analytics`, {
+  const apiUrl = getApiUrl();
+  const response = await fetch(`${apiUrl}/metrics/analytics`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

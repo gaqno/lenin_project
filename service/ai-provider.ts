@@ -1,7 +1,6 @@
 import { useUserMetrics } from "~/composables/useUserMetrics";
 import { useClientMetrics } from "~/composables/useClientMetrics";
-
-const API_BASE_URL = process.env.NUXT_PUBLIC_API_URL;
+import { getApiUrl } from "~/lib/api-config";
 
 interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -57,7 +56,8 @@ const useChatCompletion = async (
     requestBody.history = history;
   }
 
-  const response = await fetch(`${API_BASE_URL}/ai/chat`, {
+  const apiUrl = getApiUrl();
+  const response = await fetch(`${apiUrl}/ai/chat`, {
     method: "POST",
     headers: requestHeaders,
     body: JSON.stringify(requestBody),
