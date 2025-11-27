@@ -1,7 +1,12 @@
 <template>
   <ListboxRoot
     v-bind="forwarded"
-    :class="cn('flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground', props.class)"
+    :class="
+      cn(
+        'flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',
+        props.class
+      )
+    "
   >
     <slot />
   </ListboxRoot>
@@ -16,9 +21,12 @@ import { reactive, ref, watch } from "vue";
 import { provideCommandContext } from ".";
 import { cn } from "@/lib/utils";
 
-const props = withDefaults(defineProps<ListboxRootProps & { class?: HTMLAttributes["class"] }>(), {
-  modelValue: "",
-});
+const props = withDefaults(
+  defineProps<ListboxRootProps & { class?: HTMLAttributes["class"] }>(),
+  {
+    modelValue: "",
+  }
+);
 
 const emits = defineEmits<ListboxRootEmits>();
 
@@ -42,7 +50,7 @@ const filterState = reactive({
   },
 });
 
-function filterItems () {
+function filterItems() {
   if (!filterState.search) {
     filterState.filtered.count = allItems.value.size;
     // Do nothing, each item will know to show itself because search is empty
@@ -57,7 +65,9 @@ function filterItems () {
   for (const [id, value] of allItems.value) {
     const score = contains(value, filterState.search);
     filterState.filtered.items.set(id, score ? 1 : 0);
-    if (score) { itemCount++; }
+    if (score) {
+      itemCount++;
+    }
   }
 
   // Check which groups have at least 1 item shown
@@ -73,13 +83,12 @@ function filterItems () {
   filterState.filtered.count = itemCount;
 }
 
-function handleSelect () {
-  filterState.search = "";
-}
-
-watch(() => filterState.search, () => {
-  filterItems();
-});
+watch(
+  () => filterState.search,
+  () => {
+    filterItems();
+  }
+);
 
 provideCommandContext({
   allItems,

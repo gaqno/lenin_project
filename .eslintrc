@@ -4,29 +4,70 @@
     "node": true
   },
   "extends": [
-    "@nuxtjs/eslint-config-typescript"
+    "@nuxtjs/eslint-config-typescript",
+    "plugin:prettier/recommended"
   ],
   "plugins": [
-    "vitest"
+    "vitest",
+    "prettier"
   ],
   "parserOptions": {
     "parser": "@typescript-eslint/parser",
     "ecmaVersion": 2020
   },
   "rules": {
-    "semi": [
-      "error",
-      "always"
-    ],
-    "quotes": [
-      "error",
-      "double"
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
+    "prettier/prettier": "error",
     "no-console": "warn",
-    "no-unused-vars": "warn"
-  }
+    "no-unused-vars": "warn",
+    "vue/multi-word-component-names": [
+      "error",
+      {
+        "ignores": [
+          "Accordion",
+          "Alert",
+          "Avatar",
+          "Badge",
+          "Button",
+          "Calendar",
+          "Card",
+          "Checkbox",
+          "Collapsible",
+          "Command",
+          "Dialog",
+          "Input",
+          "Label",
+          "Menubar",
+          "Popover",
+          "Progress",
+          "Select",
+          "Separator",
+          "Sheet",
+          "Slider",
+          "Switch",
+          "Table",
+          "Tabs",
+          "Textarea",
+          "Toast",
+          "Toaster",
+          "Tooltip"
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["components/ui/**/*.vue"],
+      "rules": {
+        "vue/multi-word-component-names": "off",
+        "vue/require-default-prop": "off",
+        "func-call-spacing": "off"
+      }
+    },
+    {
+      "files": ["pages/**/*.vue"],
+      "rules": {
+        "vue/multi-word-component-names": "off"
+      }
+    }
+  ]
 }

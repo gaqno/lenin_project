@@ -13,7 +13,7 @@ import { useFormField } from "./useFormField";
 import { cn } from "@/lib/utils";
 
 const props = defineProps<{
-  class?: HTMLAttributes["class"]
+  class?: HTMLAttributes["class"];
 }>();
 
 const { formDescriptionId } = useFormField();

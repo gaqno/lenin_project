@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 export const createSupabaseClient = () => {
   const config = useRuntimeConfig();
@@ -9,8 +9,8 @@ export const createSupabaseClient = () => {
     {
       auth: {
         autoRefreshToken: false,
-        persistSession: false
-      }
+        persistSession: false,
+      },
     }
   );
-}; 
+};

@@ -1,7 +1,12 @@
 <template>
   <div>
     <!-- Trigger Button -->
-    <Button variant="ghost" size="icon" class="fixed bottom-4 right-4 z-50" @click="isOpenComputed = true">
+    <Button
+      variant="ghost"
+      size="icon"
+      class="fixed bottom-4 right-4 z-50"
+      @click="isOpenComputed = true"
+    >
       <Icon name="mdi:information-outline" class="h-5 w-5" />
     </Button>
 
@@ -12,23 +17,24 @@
     >
       <div class="flex justify-between items-start mb-4">
         <div>
-          <h3 class="font-semibold text-lg">
-            Informações do LeninGPT
-          </h3>
+          <h3 class="font-semibold text-lg">Informações do LeninGPT</h3>
           <p class="text-sm text-muted-foreground">
             Sobre esta aplicação e como usá-la
           </p>
         </div>
-        <Button variant="ghost" size="icon" class="h-6 w-6" @click="closeDialog">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="h-6 w-6"
+          @click="closeDialog"
+        >
           <Icon name="mdi:close" class="h-4 w-4" />
         </Button>
       </div>
 
       <div class="space-y-4">
         <div class="space-y-2">
-          <h4 class="font-semibold">
-            Como usar:
-          </h4>
+          <h4 class="font-semibold">Como usar:</h4>
           <ul class="text-sm text-muted-foreground space-y-1">
             <li>• Digite suas perguntas no campo de texto</li>
             <li>• Pressione Enter ou clique no botão enviar</li>
@@ -40,9 +46,7 @@
         <Separator />
 
         <div class="space-y-2">
-          <h4 class="font-semibold">
-            Tecnologias:
-          </h4>
+          <h4 class="font-semibold">Tecnologias:</h4>
           <ul class="text-sm text-muted-foreground space-y-1">
             <li>• Vue 3 + Nuxt 3</li>
             <li>• TypeScript</li>
@@ -55,9 +59,7 @@
         <Separator />
 
         <div class="space-y-2">
-          <h4 class="font-semibold">
-            Desenvolvedor:
-          </h4>
+          <h4 class="font-semibold">Desenvolvedor:</h4>
           <p class="text-sm text-muted-foreground">
             Gabriel Aquino - Revolucionário dedicado
           </p>

@@ -4,7 +4,7 @@
     :class="cn('text-sm font-medium', props.class)"
     v-bind="forwardedProps"
   >
-    <slot :heading-value>
+    <slot :heading-value="headingValue">
       {{ headingValue }}
     </slot>
   </CalendarHeading>
@@ -17,10 +17,12 @@ import { reactiveOmit } from "@vueuse/core";
 import { CalendarHeading, useForwardProps } from "reka-ui";
 import { cn } from "@/lib/utils";
 
-const props = defineProps<CalendarHeadingProps & { class?: HTMLAttributes["class"] }>();
+const props = defineProps<
+  CalendarHeadingProps & { class?: HTMLAttributes["class"] }
+>();
 
 defineSlots<{
-  default:(props: { headingValue: string }) => any
+  default: (props: { headingValue: string }) => any;
 }>();
 
 const delegatedProps = reactiveOmit(props, "class");

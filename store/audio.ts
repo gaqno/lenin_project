@@ -33,4 +33,4 @@ export const useAudioStore = defineStore("audio", {
       this.notificationsEnabled = true;
     },
   },
-}); 
+});

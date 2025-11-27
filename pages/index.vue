@@ -2,7 +2,11 @@
   <!-- <ToastProvider> -->
   <main class="flex flex-col h-[100dvh] bg-background relative overflow-hidden">
     <!-- Header -->
-    <ChatHeader :user="client.user" @show-about="showAboutDialog = true" @show-settings="handleShowSettings" />
+    <ChatHeader
+      :user="client.user"
+      @show-about="showAboutDialog = true"
+      @show-settings="handleShowSettings"
+    />
 
     <div class="flex flex-1 relative min-h-0">
       <!-- Main Content -->
@@ -12,7 +16,9 @@
           class="flex-1 overflow-y-auto p-4 relative bg-background bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-background via-muted/10 to-background/80"
         >
           <!-- Overlay for texture (optional) -->
-          <div class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')] mix-blend-overlay" />
+          <div
+            class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')] mix-blend-overlay"
+          />
 
           <!-- Content with relative positioning to appear above overlay -->
           <div class="relative z-10">
@@ -39,15 +45,26 @@
             </div>
 
             <!-- Loading Spinner at bottom of chat -->
-            <div v-if="loadingMessage" class="flex justify-center items-center py-8 mt-4">
-              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-              <span class="ml-2 text-sm text-muted-foreground">Processando...</span>
+            <div
+              v-if="loadingMessage"
+              class="flex justify-center items-center py-8 mt-4"
+            >
+              <div
+                class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
+              />
+              <span class="ml-2 text-sm text-muted-foreground"
+                >Processando...</span
+              >
             </div>
           </div>
         </div>
 
         <!-- Fixed Input Area at Bottom - Outside the scroll container -->
-        <ChatInput :is-loading="loadingMessage" @submit="ask" @clear="clearMessages" />
+        <ChatInput
+          :is-loading="loadingMessage"
+          @submit="ask"
+          @clear="clearMessages"
+        />
       </section>
     </div>
 
@@ -57,12 +74,10 @@
         <DialogHeader>
           <div class="flex items-center space-x-3">
             <div>
-              <DialogTitle class="pb-4">
-                LeninGPT
-              </DialogTitle>
+              <DialogTitle class="pb-4"> LeninGPT </DialogTitle>
               <DialogDescription>
-                Uma IA inspirada em Vladimir Ilyich Lenin, oferecendo insights sobre socialismo, história e filosofia
-                marxista.
+                Uma IA inspirada em Vladimir Ilyich Lenin, oferecendo insights
+                sobre socialismo, história e filosofia marxista.
               </DialogDescription>
             </div>
           </div>
@@ -74,8 +89,8 @@
               <span class="text-sm font-medium">Tecnologia</span>
             </div>
             <p class="text-sm text-muted-foreground ml-7">
-              Desenvolvido com Nuxt 3, OpenAI GPT-4, ElevenLabs e Supabase. Interface moderna com Tailwind CSS e
-              Shadcn/ui.
+              Desenvolvido com Nuxt 3, OpenAI GPT-4, ElevenLabs e Supabase.
+              Interface moderna com Tailwind CSS e Shadcn/ui.
             </p>
           </div>
 
@@ -85,7 +100,8 @@
               <span class="text-sm font-medium">Privacidade</span>
             </div>
             <p class="text-sm text-muted-foreground ml-7">
-              Suas perguntas são registradas para análise e melhorias. Dados anonimizados e seguros.
+              Suas perguntas são registradas para análise e melhorias. Dados
+              anonimizados e seguros.
             </p>
           </div>
 
@@ -141,6 +157,28 @@
           </DialogDescription>
         </DialogHeader>
         <div class="space-y-4">
+          <div class="space-y-2">
+            <Label>Provider de IA</Label>
+            <Select 
+              :model-value="app.provider" 
+              @update:model-value="(value) => {
+                if (value === 'openai' || value === 'gemini') {
+                  app.setProvider(value);
+                }
+              }"
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o provider" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gemini">Gemini</SelectItem>
+                <SelectItem value="openai">OpenAI</SelectItem>
+              </SelectContent>
+            </Select>
+            <p class="text-sm text-muted-foreground">
+              Escolha qual modelo de IA usar para gerar as respostas
+            </p>
+          </div>
           <AudioSettings />
         </div>
       </DialogContent>
@@ -167,7 +205,7 @@ import { useAppStore } from "~/store/app";
 import { useClientStore } from "~/store/client";
 import { useAudioStore } from "~/store/audio";
 import type { User } from "~/types";
-import { useChatCompletion } from "~/service/openai";
+import { useChatCompletion } from "~/service/ai-provider";
 import { postElevenLabsTextToSpeech } from "~/service/elevenlabs";
 import type { IChatMessage } from "~/components/chat/ChatMessage.vue";
 import { useToast } from "~/composables/useToast";
@@ -187,6 +225,12 @@ import DialogContent from "~/components/ui/dialog/DialogContent.vue";
 import DialogHeader from "~/components/ui/dialog/DialogHeader.vue";
 import DialogTitle from "~/components/ui/dialog/DialogTitle.vue";
 import DialogDescription from "~/components/ui/dialog/DialogDescription.vue";
+import Select from "~/components/ui/select/Select.vue";
+import SelectContent from "~/components/ui/select/SelectContent.vue";
+import SelectItem from "~/components/ui/select/SelectItem.vue";
+import SelectTrigger from "~/components/ui/select/SelectTrigger.vue";
+import SelectValue from "~/components/ui/select/SelectValue.vue";
+import Label from "~/components/ui/label/Label.vue";
 
 // Stores
 const app = useAppStore();
@@ -229,24 +273,38 @@ const fetchGit = () => {
         "Content-Type": "application/json",
       },
     })
-      .then(res => res.json())
+      .then((res) => res.json())
       .then((data) => {
         client.$patch({
           user: {
-            ...data as User,
+            ...(data as User),
           },
         });
         app.setLoading(false);
         resolve(data);
       })
-      .catch(err => reject(err));
+      .catch((err) => reject(err));
   });
 };
 
 const ask = (questionText: string) => {
+  const buildHistory = (): Array<{ role: "user" | "assistant"; content: string }> => {
+    const history: Array<{ role: "user" | "assistant"; content: string }> = [];
+    
+    for (const msg of responseStream.value) {
+      if (msg.role === "user") {
+        history.push({ role: "user", content: msg.data });
+      } else if (msg.role === "sys") {
+        history.push({ role: "assistant", content: msg.data });
+      }
+    }
+    
+    return history;
+  };
+
+  const history = buildHistory();
   responseStream.value.push({ data: questionText, role: "user" });
 
-  // Set loading states
   loadingMessage.value = true;
   app.setLoading(true);
 
@@ -254,7 +312,7 @@ const ask = (questionText: string) => {
     showInfo("Pergunta enviada", "Processando sua pergunta...");
   }
 
-  useChatCompletion(questionText)
+  useChatCompletion(questionText, app.provider, history)
     .then((data: any) => {
       const { message } = data;
       loadingMessage.value = false;
@@ -295,16 +353,22 @@ const ask = (questionText: string) => {
           .catch((err: any) => {
             loadingAudio.value = false;
             responseStream.value.pop();
-            
-            const errorMessage = err instanceof Error ? err.message : "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida";
-            
+
+            const errorMessage =
+              err instanceof Error
+                ? err.message
+                : "Aparentemente a maquina do estado capitalista nos limitou ao dar voz a razão.. Transcrição por áudio mal-sucedida";
+
             responseStream.value.push({
               data: errorMessage,
               role: "warn",
             });
 
             if (audioStore.notificationsEnabled) {
-              const errorTitle = err?.statusCode === 429 ? "Limite de requisições" : "Erro no áudio";
+              const errorTitle =
+                err?.statusCode === 429
+                  ? "Limite de requisições"
+                  : "Erro no áudio";
               showError(errorTitle, errorMessage);
             }
           });
@@ -320,16 +384,20 @@ const ask = (questionText: string) => {
       loadingMessage.value = false;
       loadingAudio.value = false;
       app.setLoading(false);
-      
-      const errorMessage = err instanceof Error ? err.message : "Falha ao processar sua pergunta. Tente novamente.";
-      
+
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Falha ao processar sua pergunta. Tente novamente.";
+
       responseStream.value.push({
         data: errorMessage,
         role: "warn",
       });
 
       if (audioStore.notificationsEnabled) {
-        const errorTitle = err?.statusCode === 429 ? "Limite de requisições" : "Erro";
+        const errorTitle =
+          err?.statusCode === 429 ? "Limite de requisições" : "Erro";
         showError(errorTitle, errorMessage);
       }
     });
@@ -417,9 +485,7 @@ onMounted(() => {
   document.addEventListener("click", enableAutoplay);
   document.addEventListener("touchstart", enableAutoplay);
 
-  Promise.all([
-    fetchGit(),
-  ]);
+  Promise.all([fetchGit()]);
 });
 
 onUnmounted(() => {

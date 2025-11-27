@@ -21,7 +21,10 @@
                 Alternar entre tema claro e escuro
               </p>
             </div>
-            <Switch :checked="darkModeComputed" @update:checked="toggleDarkMode" />
+            <Switch
+              :checked="darkModeComputed"
+              @update:checked="toggleDarkMode"
+            />
           </div>
 
           <div class="flex items-center justify-between">
@@ -31,7 +34,10 @@
                 Habilitar respostas em áudio
               </p>
             </div>
-            <Switch :checked="audioEnabledComputed" @update:checked="toggleAudio" />
+            <Switch
+              :checked="audioEnabledComputed"
+              @update:checked="toggleAudio"
+            />
           </div>
 
           <div class="flex items-center justify-between">
@@ -41,7 +47,10 @@
                 Receber notificações de novas mensagens
               </p>
             </div>
-            <Switch :checked="notificationsEnabledComputed" @update:checked="toggleNotifications" />
+            <Switch
+              :checked="notificationsEnabledComputed"
+              @update:checked="toggleNotifications"
+            />
           </div>
         </div>
 
@@ -50,13 +59,19 @@
         <div class="space-y-4">
           <Label>Velocidade do Áudio</Label>
           <div class="flex items-center space-x-2">
-            <Button variant="outline" size="sm" @click="updateAudioSpeed(Math.max(0.5, audioSpeedComputed - 0.1))">
+            <Button
+              variant="outline"
+              size="sm"
+              @click="updateAudioSpeed(Math.max(0.5, audioSpeedComputed - 0.1))"
+            >
               -
             </Button>
-            <span class="flex-1 text-center">
-              {{ audioSpeedComputed }}x
-            </span>
-            <Button variant="outline" size="sm" @click="updateAudioSpeed(Math.min(2, audioSpeedComputed + 0.1))">
+            <span class="flex-1 text-center"> {{ audioSpeedComputed }}x </span>
+            <Button
+              variant="outline"
+              size="sm"
+              @click="updateAudioSpeed(Math.min(2, audioSpeedComputed + 0.1))"
+            >
               +
             </Button>
           </div>
@@ -69,20 +84,17 @@
 
         <div class="space-y-4">
           <Label>Idioma</Label>
-          <Select :model-value="languageComputed" @update:model-value="updateLanguage">
+          <Select
+            :model-value="languageComputed"
+            @update:model-value="updateLanguage"
+          >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o idioma" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="pt">
-                Português
-              </SelectItem>
-              <SelectItem value="en">
-                English
-              </SelectItem>
-              <SelectItem value="es">
-                Español
-              </SelectItem>
+              <SelectItem value="pt"> Português </SelectItem>
+              <SelectItem value="en"> English </SelectItem>
+              <SelectItem value="es"> Español </SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -22,10 +22,10 @@ export const useUserMetrics = () => {
     // Set custom headers for the next request
     const headers = new Headers();
     if (timezone) {
-      headers.set('x-user-timezone', timezone);
+      headers.set("x-user-timezone", timezone);
     }
     if (language) {
-      headers.set('x-user-language', language);
+      headers.set("x-user-language", language);
     }
 
     return headers;
@@ -36,4 +36,4 @@ export const useUserMetrics = () => {
     getLanguage,
     setMetricsHeaders,
   };
-}; 
+};

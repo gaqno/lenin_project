@@ -10,7 +10,11 @@ import "./global.css";
 useHead({
   title: "Lenin GPT",
   meta: [
-    { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" },
+    {
+      name: "viewport",
+      content:
+        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+    },
     { name: "theme-color", content: "#c41e3a" },
   ],
   link: [

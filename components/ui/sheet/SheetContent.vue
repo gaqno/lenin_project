@@ -26,7 +26,6 @@ import { X } from "lucide-vue-next";
 import {
   DialogClose,
   DialogContent,
-
   DialogOverlay,
   DialogPortal,
   useForwardPropsEmits,
@@ -36,8 +35,8 @@ import { sheetVariants } from ".";
 import { cn } from "@/lib/utils";
 
 interface SheetContentProps extends DialogContentProps {
-  class?: HTMLAttributes["class"]
-  side?: SheetVariants["side"]
+  class?: HTMLAttributes["class"];
+  side?: SheetVariants["side"];
 }
 
 defineOptions({

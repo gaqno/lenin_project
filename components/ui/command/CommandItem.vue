@@ -4,10 +4,17 @@
     v-bind="forwarded"
     :id="id"
     ref="itemRef"
-    :class="cn('relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0', props.class)"
-    @select="() => {
-      filterState.search = ''
-    }"
+    :class="
+      cn(
+        'relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
+        props.class
+      )
+    "
+    @select="
+      () => {
+        filterState.search = '';
+      }
+    "
   >
     <slot />
   </ListboxItem>
@@ -22,7 +29,9 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useCommand, useCommandGroup } from ".";
 import { cn } from "@/lib/utils";
 
-const props = defineProps<ListboxItemProps & { class?: HTMLAttributes["class"] }>();
+const props = defineProps<
+  ListboxItemProps & { class?: HTMLAttributes["class"] }
+>();
 const emits = defineEmits<ListboxItemEmits>();
 
 const delegatedProps = reactiveOmit(props, "class");
@@ -52,10 +61,15 @@ const isRender = computed(() => {
 const itemRef = ref();
 const currentElement = useCurrentElement(itemRef);
 onMounted(() => {
-  if (!(currentElement.value instanceof HTMLElement)) { return; }
+  if (!(currentElement.value instanceof HTMLElement)) {
+    return;
+  }
 
   // textValue to perform filter
-  allItems.value.set(id, currentElement.value.textContent ?? props?.value!.toString());
+  allItems.value.set(
+    id,
+    currentElement.value.textContent ?? props?.value!.toString()
+  );
 
   const groupId = groupContext?.id;
   if (groupId) {

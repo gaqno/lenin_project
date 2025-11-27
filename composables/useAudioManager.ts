@@ -15,7 +15,7 @@ export const useAudioManager = () => {
   };
 
   const pauseAllOtherAudios = (currentAudio: HTMLAudioElement) => {
-    globalAudioElements.value.forEach(audio => {
+    globalAudioElements.value.forEach((audio) => {
       if (audio !== currentAudio && !audio.paused) {
         audio.pause();
       }
@@ -24,7 +24,7 @@ export const useAudioManager = () => {
   };
 
   const pauseAllAudios = () => {
-    globalAudioElements.value.forEach(audio => {
+    globalAudioElements.value.forEach((audio) => {
       if (!audio.paused) {
         audio.pause();
       }
@@ -41,4 +41,4 @@ export const useAudioManager = () => {
     pauseAllAudios,
     getCurrentPlayingAudio,
   };
-}; 
+};

@@ -1,5 +1,7 @@
 <template>
-  <div class="border-t-4 border-double border-border bg-card p-4 pb-6 md:pb-4 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.1)] shrink-0 z-20 animate-slide-up [animation-delay:400ms] opacity-0 [animation-fill-mode:forwards]">
+  <div
+    class="border-t-4 border-double border-border bg-card p-4 pb-6 md:pb-4 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.1)] shrink-0 z-20 animate-slide-up [animation-delay:400ms] opacity-0 [animation-fill-mode:forwards]"
+  >
     <div class="flex items-end space-x-3 max-w-4xl mx-auto">
       <div class="flex-1">
         <Textarea

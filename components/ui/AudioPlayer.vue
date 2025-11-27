@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-green-50/80 border border-green-200/50 rounded-lg p-4 backdrop-blur-sm shadow-md dark:bg-success/20 dark:border-success/30"
+    class="bg-card/95 border-l-4 border-double border-primary/60 rounded-lg p-4 backdrop-blur-sm shadow-md"
   >
     <div class="flex items-center space-x-3">
       <!-- Play/Pause Button -->
@@ -8,26 +8,30 @@
         variant="ghost"
         size="icon"
         :disabled="!audioUrl"
-        class="h-10 w-10 rounded-full bg-green-100 hover:bg-green-200 dark:bg-success/20 dark:hover:bg-success/30"
+        class="h-10 w-10 rounded-full bg-muted hover:bg-muted/80"
         @click="togglePlay"
       >
         <Icon
           :name="isPlaying ? 'mdi:pause' : 'mdi:play'"
-          class="h-5 w-5 text-green-700 dark:text-success-foreground"
+          class="h-5 w-5 text-primary"
         />
       </Button>
 
       <!-- Progress Bar -->
       <div class="flex-1 space-y-2">
-        <div class="flex items-center justify-between text-xs text-green-700 dark:text-success-foreground">
+        <div
+          class="flex items-center justify-between text-xs text-muted-foreground"
+        >
           <span>{{ formatTime(currentTime) }}</span>
           <span>{{ formatTime(duration) }}</span>
         </div>
 
         <div class="relative">
-          <div class="h-2 bg-green-200 rounded-full overflow-hidden dark:bg-success/20">
+          <div
+            class="h-2 bg-muted/40 rounded-full overflow-hidden"
+          >
             <div
-              class="h-full bg-green-600 rounded-full transition-all duration-100 dark:bg-success"
+              class="h-full bg-primary rounded-full transition-all duration-100"
               :style="{ width: `${progress}%` }"
             />
           </div>
@@ -41,14 +45,17 @@
             class="absolute inset-0 w-full h-2 opacity-0 cursor-pointer"
             :disabled="!audioUrl"
             @input="seek"
-          >
+          />
         </div>
       </div>
 
       <!-- Volume Control -->
       <div class="flex items-center space-x-2">
         <Button variant="ghost" size="icon" class="h-8 w-8" @click="toggleMute">
-          <Icon :name="volumeIcon" class="h-4 w-4 text-green-700 dark:text-success-foreground" />
+          <Icon
+            :name="volumeIcon"
+            class="h-4 w-4 text-foreground"
+          />
         </Button>
 
         <div class="relative w-16">
@@ -58,10 +65,10 @@
             :max="1"
             :step="0.1"
             :value="volume"
-            class="w-full h-1 bg-green-200 rounded-lg appearance-none cursor-pointer slider dark:bg-success/20"
+            class="w-full h-1 bg-muted/40 rounded-lg appearance-none cursor-pointer slider"
             :disabled="!audioUrl"
             @input="setVolume"
-          >
+          />
         </div>
       </div>
 
@@ -70,7 +77,7 @@
         <Button
           variant="ghost"
           size="sm"
-          class="h-7 px-2 text-xs text-green-700 dark:text-success-foreground"
+          class="h-7 px-2 text-xs text-muted-foreground"
           @click="changeSpeed"
         >
           {{ playbackRate }}x
@@ -107,7 +114,8 @@ const props = withDefaults(defineProps<IAudioPlayerProps>(), {
 });
 
 // Global audio manager and store
-const { registerAudio, unregisterAudio, pauseAllOtherAudios } = useAudioManager();
+const { registerAudio, unregisterAudio, pauseAllOtherAudios } =
+  useAudioManager();
 const audioStore = useAudioStore();
 
 // Reactive state
@@ -122,19 +130,27 @@ const hasError = ref(false);
 
 // Computed
 const progress = computed(() => {
-  if (duration.value === 0) { return 0; }
+  if (duration.value === 0) {
+    return 0;
+  }
   return (currentTime.value / duration.value) * 100;
 });
 
 const volumeIcon = computed(() => {
-  if (isMuted.value || volume.value === 0) { return "mdi:volume-off"; }
-  if (volume.value < 0.5) { return "mdi:volume-low"; }
+  if (isMuted.value || volume.value === 0) {
+    return "mdi:volume-off";
+  }
+  if (volume.value < 0.5) {
+    return "mdi:volume-low";
+  }
   return "mdi:volume-high";
 });
 
 // Methods
 const togglePlay = async () => {
-  if (!audioElement.value) { return; }
+  if (!audioElement.value) {
+    return;
+  }
 
   try {
     if (isPlaying.value) {
@@ -152,7 +168,9 @@ const togglePlay = async () => {
 };
 
 const toggleMute = () => {
-  if (!audioElement.value) { return; }
+  if (!audioElement.value) {
+    return;
+  }
 
   isMuted.value = !isMuted.value;
   audioElement.value.muted = isMuted.value;
@@ -205,7 +223,9 @@ const formatTime = (seconds: number): string => {
 
 // Event handlers
 const onLoadedMetadata = () => {
-  if (!audioElement.value) { return; }
+  if (!audioElement.value) {
+    return;
+  }
 
   duration.value = audioElement.value.duration;
 
@@ -219,17 +239,22 @@ const onLoadedMetadata = () => {
   if (props.autoplay && !isPlaying.value) {
     // Pause all other audios before autoplay
     pauseAllOtherAudios(audioElement.value);
-    audioElement.value.play().then(() => {
-      isPlaying.value = true;
-    }).catch(() => {
-      // Autoplay failed, user needs to interact first
-      console.log("Autoplay blocked by browser");
-    });
+    audioElement.value
+      .play()
+      .then(() => {
+        isPlaying.value = true;
+      })
+      .catch(() => {
+        // Autoplay failed, user needs to interact first
+        console.log("Autoplay blocked by browser");
+      });
   }
 };
 
 const onTimeUpdate = () => {
-  if (!audioElement.value) { return; }
+  if (!audioElement.value) {
+    return;
+  }
   currentTime.value = audioElement.value.currentTime;
 };
 
@@ -257,38 +282,47 @@ const onError = () => {
 };
 
 // Watch for audio URL changes
-watch(() => props.audioUrl, (newUrl) => {
-  if (newUrl && audioElement.value) {
-    // Reset state for new audio
-    isPlaying.value = false;
-    currentTime.value = 0;
-    duration.value = 0;
-    hasError.value = false;
+watch(
+  () => props.audioUrl,
+  (newUrl) => {
+    if (newUrl && audioElement.value) {
+      // Reset state for new audio
+      isPlaying.value = false;
+      currentTime.value = 0;
+      duration.value = 0;
+      hasError.value = false;
 
-    // Load new audio
-    audioElement.value.load();
+      // Load new audio
+      audioElement.value.load();
 
-    // If autoplay is enabled, pause all other audios
-    if (props.autoplay) {
-      pauseAllOtherAudios(audioElement.value);
+      // If autoplay is enabled, pause all other audios
+      if (props.autoplay) {
+        pauseAllOtherAudios(audioElement.value);
+      }
     }
   }
-});
+);
 
 // Watch for store changes
-watch(() => audioStore.defaultVolume, (newVolume) => {
-  if (audioElement.value) {
-    audioElement.value.volume = newVolume;
-    volume.value = newVolume;
+watch(
+  () => audioStore.defaultVolume,
+  (newVolume) => {
+    if (audioElement.value) {
+      audioElement.value.volume = newVolume;
+      volume.value = newVolume;
+    }
   }
-});
+);
 
-watch(() => audioStore.audioSpeed, (newSpeed) => {
-  if (audioElement.value) {
-    audioElement.value.playbackRate = newSpeed;
-    playbackRate.value = newSpeed;
+watch(
+  () => audioStore.audioSpeed,
+  (newSpeed) => {
+    if (audioElement.value) {
+      audioElement.value.playbackRate = newSpeed;
+      playbackRate.value = newSpeed;
+    }
   }
-});
+);
 
 // Lifecycle
 onMounted(() => {
@@ -314,7 +348,7 @@ onUnmounted(() => {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #059669;
+  background: hsl(var(--primary));
   cursor: pointer;
 }
 
@@ -322,7 +356,7 @@ onUnmounted(() => {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #059669;
+  background: hsl(var(--primary));
   cursor: pointer;
   border: none;
 }
@@ -331,7 +365,7 @@ onUnmounted(() => {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #059669;
+  background: hsl(var(--primary));
   cursor: pointer;
 }
 </style>

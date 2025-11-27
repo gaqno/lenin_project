@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: "2025-11-27",
   modules: [
     "@vueuse/nuxt",
     "@pinia/nuxt",
@@ -13,6 +13,9 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@vite-pwa/nuxt",
   ],
+  eslint: {
+    lintOnStart: false,
+  },
   pwa: {
     registerType: "autoUpdate",
     manifest: {
@@ -41,7 +44,12 @@ export default defineNuxtConfig({
       type: "module",
     },
   },
-  components: true,
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false,
+    },
+  ],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -61,11 +69,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-      OPENAI_CONTEXT: process.env.OPENAI_CONTEXT,
-      ELEVENLABS_TOKEN: process.env.ELEVENLABS_TOKEN,
-      ELEVENLABS_VOICE_ID: process.env.ELEVENLABS_VOICE_ID,
-      ELEVENLABS_BASE_URL: process.env.ELEVENLABS_BASE_URL,
+      API_URL: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3001',
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     },

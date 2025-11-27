@@ -39,7 +39,10 @@
             :max="1"
             :step="0.1"
             class="flex-1"
-            @update:model-value="(value: number[] | undefined) => audioStore.updateDefaultVolume(value?.[0] || 0.8)"
+            @update:model-value="
+              (value: number[] | undefined) =>
+                audioStore.updateDefaultVolume(value?.[0] || 0.8)
+            "
           />
           <span class="text-sm text-muted-foreground w-12 text-right">
             {{ Math.round(audioStore.defaultVolume * 100) }}%
@@ -57,7 +60,10 @@
             :max="2"
             :step="0.1"
             class="flex-1"
-            @update:model-value="(value: number[] | undefined) => audioStore.updateAudioSpeed(value?.[0] || 1.0)"
+            @update:model-value="
+              (value: number[] | undefined) =>
+                audioStore.updateAudioSpeed(value?.[0] || 1.0)
+            "
           />
           <span class="text-sm text-muted-foreground w-12 text-right">
             {{ audioStore.audioSpeed }}x

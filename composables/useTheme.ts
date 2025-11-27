@@ -54,4 +54,4 @@ export const useTheme = () => {
     setTheme,
     initializeTheme,
   };
-}; 
+};

@@ -1,8 +1,9 @@
 export const useAppStore = defineStore("app", {
   state: () => ({
-    darkMode: true, // Default to dark mode
+    darkMode: true,
     loading: false,
     language: "pt",
+    provider: "gemini" as "openai" | "gemini",
     sidemenu: false,
     modal: {
       show: false,
@@ -33,6 +34,9 @@ export const useAppStore = defineStore("app", {
       const langs = ["pt", "en", "cn"];
       const index = langs.indexOf(this.language);
       this.language = langs[(index + 1) % langs.length];
+    },
+    setProvider(provider: "openai" | "gemini") {
+      this.provider = provider;
     },
   },
 });

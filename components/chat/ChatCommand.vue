@@ -18,7 +18,12 @@
         </CommandItem>
       </CommandGroup>
       <CommandGroup heading="Perguntas Rápidas">
-        <CommandItem v-for="tip in quickTips" :key="tip" :value="tip" @select="handleQuickTip(tip)">
+        <CommandItem
+          v-for="tip in quickTips"
+          :key="tip"
+          :value="tip"
+          @select="handleQuickTip(tip)"
+        >
           <Icon name="mdi:lightbulb-outline" class="mr-2 h-4 w-4" />
           <span>{{ tip }}</span>
         </CommandItem>

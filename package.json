@@ -1,5 +1,5 @@
 {
-  "name": "landing-gaqno",
+  "name": "llm_lenin",
   "type": "module",
   "engines": {
     "node": ">=22.12.0",
@@ -16,7 +16,10 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint --ext .js,.vue,.ts --ignore-path .gitignore .",
+    "lint:fix": "eslint --ext .js,.vue,.ts --ignore-path .gitignore . --fix",
+    "format": "prettier --write \"**/*.{js,ts,vue,json,css,scss,md}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,vue,json,css,scss,md}\"",
     "test": "vitest"
   },
   "devDependencies": {
@@ -31,15 +34,19 @@
     "@vueuse/nuxt": "^10.7.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-vitest": "^0.2.6",
     "nuxt": "^3.10.0",
     "nuxt-delay-hydration": "^1.2.1",
     "nuxt-icon": "^0.6.0",
+    "prettier": "^3.7.1",
     "shadcn-nuxt": "^2.2.0",
     "typescript": "^5.3.0",
     "vitest": "^3.2.0"
   },
   "dependencies": {
+    "@google/genai": "^1.30.0",
     "@pinia/nuxt": "^0.5.0",
     "@supabase/supabase-js": "^2.53.0",
     "@types/aos": "^3.0.4",

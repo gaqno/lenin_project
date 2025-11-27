@@ -3,12 +3,23 @@
     <CardContent class="p-4">
       <div class="flex items-start space-x-3">
         <!-- Avatar for system messages -->
-        <div v-if="message.role === 'sys'" class="flex-shrink-0 animate-fade-in [animation-delay:300ms]">
-          <img src="/lenin_profile.jpg" alt="Lenin" class="h-10 w-10 rounded-sm border border-muted/50 object-cover sepia-[0.3] shadow-sm">
+        <div
+          v-if="message.role === 'sys'"
+          class="flex-shrink-0 animate-fade-in [animation-delay:300ms]"
+        >
+          <img
+            src="/lenin_profile.jpg"
+            alt="Lenin"
+            class="h-10 w-10 rounded-sm border border-muted/50 object-cover sepia-[0.3] shadow-sm"
+          />
         </div>
 
         <!-- Icon for other message types -->
-        <Icon v-else :name="getMessageIcon(message.role)" :class="getMessageIconClass(message.role)" />
+        <Icon
+          v-else
+          :name="getMessageIcon(message.role)"
+          :class="getMessageIconClass(message.role)"
+        />
 
         <div class="flex-1 min-w-0">
           <p
@@ -63,13 +74,13 @@ const messageClass = computed(() => {
     case "sys":
       return "bg-card/95 border-l-4 border-double border-primary/60 backdrop-blur-sm shadow-md ml-2";
     case "warn":
-      return "bg-destructive/10 border-l-4 border-destructive/60 backdrop-blur-sm shadow-md";
+      return "bg-card/95 border-l-4 border-double border-primary/60 backdrop-blur-sm shadow-md ml-2";
     case "loading":
-      return "bg-muted/30 border-muted/40 backdrop-blur-sm shadow-md";
+      return "bg-card/95 border-l-4 border-double border-primary/60 backdrop-blur-sm shadow-md ml-2";
     case "audio":
-      return "bg-success/10 border-success/20 backdrop-blur-sm shadow-md";
+    return "bg-card/95 border-l-4 border-double border-primary/60 backdrop-blur-sm shadow-md ml-2";
     default:
-      return "bg-card/80 border-border/40 backdrop-blur-sm shadow-md";
+      return "bg-card/95 border-l-4 border-double border-primary/60 backdrop-blur-sm shadow-md ml-2";
   }
 });
 

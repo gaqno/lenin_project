@@ -4,7 +4,7 @@
     :class="
       cn(
         'group flex flex-1 list-none items-center justify-center gap-x-1',
-        props.class,
+        props.class
       )
     "
   >
@@ -19,7 +19,9 @@ import { reactiveOmit } from "@vueuse/core";
 import { NavigationMenuList, useForwardProps } from "reka-ui";
 import { cn } from "@/lib/utils";
 
-const props = defineProps<NavigationMenuListProps & { class?: HTMLAttributes["class"] }>();
+const props = defineProps<
+  NavigationMenuListProps & { class?: HTMLAttributes["class"] }
+>();
 
 const delegatedProps = reactiveOmit(props, "class");
 

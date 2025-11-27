@@ -9,23 +9,37 @@
       leave-from-class="translate-x-0"
       leave-to-class="-translate-x-full"
     >
-      <div v-if="isOpen" class="h-full w-80 max-w-[90vw] bg-card border-r shadow-lg">
+      <div
+        v-if="isOpen"
+        class="h-full w-80 max-w-[90vw] bg-card border-r shadow-lg"
+      >
         <div class="p-4 border-b">
           <div class="flex items-center justify-between">
-            <h2 class="font-semibold">
-              Menu
-            </h2>
-            <Button variant="ghost" size="icon" class="md:hidden" @click="closeSidebar">
+            <h2 class="font-semibold">Menu</h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              class="md:hidden"
+              @click="closeSidebar"
+            >
               <Icon name="mdi:close" class="h-4 w-4" />
             </Button>
           </div>
         </div>
         <div class="p-4 space-y-2">
-          <Button variant="ghost" class="w-full justify-start" @click="clearConversation">
+          <Button
+            variant="ghost"
+            class="w-full justify-start"
+            @click="clearConversation"
+          >
             <Icon name="mdi:delete-empty-outline" class="mr-2 h-4 w-4" />
             Limpar conversa
           </Button>
-          <Button variant="ghost" class="w-full justify-start" @click="pushUpdates">
+          <Button
+            variant="ghost"
+            class="w-full justify-start"
+            @click="pushUpdates"
+          >
             <Icon name="mdi:update" class="mr-2 h-4 w-4" />
             Atualizações
           </Button>
