@@ -1,7 +1,7 @@
 import { useUserMetrics } from "~/composables/useUserMetrics";
 import { useClientMetrics } from "~/composables/useClientMetrics";
 
-const API_BASE_URL = process.env.NUXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_BASE_URL = process.env.NUXT_PUBLIC_API_URL;
 
 interface ChatMessage {
   role: "user" | "assistant" | "system";
