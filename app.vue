@@ -46,6 +46,7 @@ useHead({
       async: true,
     },
     {
+      type: 'text/javascript',
       innerHTML: newRelicScript.value,
     },
   ],
