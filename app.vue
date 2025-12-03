@@ -29,6 +29,7 @@ useHead({
     {
       type: "text/javascript",
       innerHTML: `;window.NREUM||(NREUM={});NREUM.init={distributed_tracing:{enabled:true},performance:{capture_detail:true,capture_marks:true,capture_measures:true},browser_consent_mode:{enabled:false},privacy:{cookies_enabled:true},ajax:{deny_list:["bam.nr-data.net"]}};
+
 ;NREUM.loader_config={accountID:"7428152",trustKey:"7428152",agentID:"601604318",licenseKey:"NRJS-209190fe51e1f1dba3c",applicationID:"601604318"};
 ;NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"NRJS-209190fe51e1f1dba3c",applicationID:"601604318",sa:1};
 ;/*! For license information please see nr-loader-spa-1.303.0.min.js.LICENSE.txt */

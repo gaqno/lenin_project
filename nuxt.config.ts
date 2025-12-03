@@ -73,11 +73,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API_URL: process.env.NUXT_PUBLIC_API_URL,
-      NEW_RELIC_ACCOUNT_ID: process.env.NUXT_PUBLIC_NEW_RELIC_ACCOUNT_ID,
-      NEW_RELIC_TRUST_KEY: process.env.NUXT_PUBLIC_NEW_RELIC_TRUST_KEY,
-      NEW_RELIC_AGENT_ID: process.env.NUXT_PUBLIC_NEW_RELIC_AGENT_ID,
-      NEW_RELIC_LICENSE_KEY: process.env.NUXT_PUBLIC_NEW_RELIC_LICENSE_KEY,
-      NEW_RELIC_APPLICATION_ID: process.env.NUXT_PUBLIC_NEW_RELIC_APPLICATION_ID,
     },
   },
 });
