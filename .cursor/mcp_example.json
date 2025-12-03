@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "new-relic-mcp-server": {
+            "url": "https://mcp.newrelic.com/mcp/",
+            "type": "http",
+            "headers": {
+                "api-key": "NRAK-****",
+                "include-tags": "discovery,alerting"
+            }
+        }
+    }
+}
