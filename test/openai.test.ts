@@ -16,7 +16,7 @@ describe("useChatCompletion", () => {
     expect(content).toContain("useChatCompletion");
     expect(content).toContain("export { useChatCompletion }");
     expect(content).toContain("fetch");
-    expect(content).toContain("/ai/chat");
+    expect(content).toContain("/chat");
     expect(content).toContain("NUXT_PUBLIC_API_URL");
     expect(content).toContain("http://localhost:3001");
   });

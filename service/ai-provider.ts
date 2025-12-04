@@ -57,7 +57,7 @@ const useChatCompletion = async (
   }
 
   const apiUrl = getApiUrl();
-  const response = await fetch(`${apiUrl}/ai/chat`, {
+  const response = await fetch(`${apiUrl}/chat`, {
     method: "POST",
     headers: requestHeaders,
     body: JSON.stringify(requestBody),
