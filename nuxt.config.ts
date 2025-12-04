@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     "nuxt-swiper",
     "shadcn-nuxt",
     "@vite-pwa/nuxt",
+    "~/modules/newrelic",
   ],
   eslint: {
     lintOnStart: false,

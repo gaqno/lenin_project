@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+import 'newrelic'
 import "./global.css";
 
 useHead({

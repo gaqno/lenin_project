@@ -60,6 +60,7 @@
     "clsx": "^2.1.1",
     "jsdom": "^23.0.0",
     "lucide-vue-next": "^0.536.0",
+    "newrelic": "^13.6.6",
     "nuxt-swiper": "^1.1.0",
     "openai": "^4.20.0",
     "pinia": "^2.1.7",
